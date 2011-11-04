@@ -1,0 +1,1 @@
+SUBDIRS = base ssh server
