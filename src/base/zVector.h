@@ -44,6 +44,7 @@ public:
   void append(zObject* element);
   void insertAt(int index, zObject* element);
   zObject* removeAt(int index);
+  void removeAll(void);
   zObject* getAt(int index) const;
   zObject* getrAt(int index) const;
   int contains(zObject* element) const;

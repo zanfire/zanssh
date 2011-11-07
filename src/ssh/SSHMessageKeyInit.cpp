@@ -40,7 +40,7 @@ zVectorString SSHMessageKeyInit::getKexAlgorithms(void) const {
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
 
   if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize - 17);
+      zString str = zString::fromPascalString(message, messageSize);
       return zStringTokenizer::split(str, ",");
   }
   else {
@@ -61,8 +61,8 @@ zVectorString SSHMessageKeyInit::getServerHostKeyAlgorithms(void) const {
   SSHMessage::skipNameList(&message, messageSize);
 
   if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize - 17);
-      return zStringTokenizer::split(str, ",");
+    zString str = zString::fromPascalString(message, messageSize, true);
+    return zStringTokenizer::split(str, ",");
   }
   else {
     return zVectorString();
@@ -84,8 +84,8 @@ zVectorString SSHMessageKeyInit::getEncryptionAlgorithmsClientToServer(void) con
 
 
   if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize - 17);
-      return zStringTokenizer::split(str, ",");
+    zString str = zString::fromPascalString(message, messageSize, true);
+    return zStringTokenizer::split(str, ",");
   }
   else {
     return zVectorString();
@@ -107,8 +107,8 @@ zVectorString SSHMessageKeyInit::getEncryptionAlgorithmsServerToClient(void) con
   SSHMessage::skipNameList(&message, messageSize);
 
   if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize - 17);
-      return zStringTokenizer::split(str, ",");
+    zString str = zString::fromPascalString(message, messageSize);
+    return zStringTokenizer::split(str, ",");
   }
   else {
     return zVectorString();
@@ -131,8 +131,8 @@ zVectorString SSHMessageKeyInit::getMacAlgorithmsClientToServer(void) const {
   SSHMessage::skipNameList(&message, messageSize);
 
   if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize - 17);
-      return zStringTokenizer::split(str, ",");
+    zString str = zString::fromPascalString(message, messageSize, true);
+    return zStringTokenizer::split(str, ",");
   }
   else {
     return zVectorString();
@@ -156,8 +156,8 @@ zVectorString SSHMessageKeyInit::getMacAlgorithmsServerToClient(void) const {
   SSHMessage::skipNameList(&message, messageSize);
 
   if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize - 17);
-      return zStringTokenizer::split(str, ",");
+    zString str = zString::fromPascalString(message, messageSize, true);
+    return zStringTokenizer::split(str, ",");
   }
   else {
     return zVectorString();
@@ -183,8 +183,8 @@ zVectorString SSHMessageKeyInit::getCompressionAlgorithmsClientToServer(void) co
 
 
   if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize - 17);
-      return zStringTokenizer::split(str, ",");
+    zString str = zString::fromPascalString(message, messageSize, true);;
+    return zStringTokenizer::split(str, ",");
   }
   else {
     return zVectorString();
@@ -236,8 +236,8 @@ zVectorString SSHMessageKeyInit::getLanguagesClientToServer(void) const {
 
 
   if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize - 17);
-      return zStringTokenizer::split(str, ",");
+    zString str = zString::fromPascalString(message, messageSize, true);
+    return zStringTokenizer::split(str, ",");
   }
   else {
     return zVectorString();
@@ -263,8 +263,8 @@ zVectorString SSHMessageKeyInit::getLanguagesServerToClient(void) const {
 
 
   if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize - 17);
-      return zStringTokenizer::split(str, ",");
+    zString str = zString::fromPascalString(message, messageSize, true);
+    return zStringTokenizer::split(str, ",");
   }
   else {
     return zVectorString();

@@ -64,7 +64,11 @@ zString SSHMessage::toString(void) {
 void SSHMessage::skipBytes(int bytes, unsigned char** message, int& messageSize) {
   if (message == NULL) return; // Nothing to do.
   if (*message == NULL) return; // Nothing to do.
-  if (messageSize < bytes) return; // Nothing to do.
+  if (messageSize < bytes) {
+    *message = NULL;
+    messageSize = 0;
+    return;
+  }
 
   *message = *message + bytes;
   messageSize -= bytes;
@@ -74,8 +78,9 @@ void SSHMessage::skipBytes(int bytes, unsigned char** message, int& messageSize)
 void SSHMessage::skipNameList(unsigned char** message, int& messageSize) {
   if (message == NULL) return; // Nothing to do.
   if (*message == NULL) return; // Nothing to do.
-  if (messageSize >= 4) return; // Nothing to do.
+  if (messageSize < 4) return; // Nothing to do.
   // Read length of name list.
-  uint32_t length = ((uint32_t*)message)[0];
-  skipBytes(length, message, messageSize);
+  uint32_t length = ntohl(((uint32_t*)*message)[0]);
+  skipBytes(length + 4, message, messageSize);
+
 }

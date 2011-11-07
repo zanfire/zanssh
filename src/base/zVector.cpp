@@ -47,6 +47,8 @@ zVector::zVector(const zVector& obj) {
 
 
 zVector& zVector::operator=(zVector const& rhs) {
+  zScopeMutex scope(_mtx);
+  removeAll();
   if (this != &rhs) {
     copyFrom(rhs);
   }
@@ -100,6 +102,17 @@ zObject* zVector::removeAt(int index) {
   }
   _count--;
   return o;
+}
+
+
+void zVector::removeAll(void) {
+  zScopeMutex scope(_mtx);
+
+  for(int i = _count -1; i >= 0; i--) {
+    _vector[i]->releaseReference();
+    _vector[i] = NULL;
+  }
+  _count = 0;
 }
 
 
