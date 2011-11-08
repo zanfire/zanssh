@@ -77,7 +77,7 @@ void zVector::insertAt(int index, zObject* element) {
   if (index < 0) return;
   if (_count == _size) {
     _size += VECTOR_SIZE_INCREMENT;
-    _vector = (zObject**)realloc(_vector, _size);
+    _vector = (zObject**)realloc(_vector, _size * sizeof(zObject*));
   }
   
   for(int i = _count; i > index; i--) {
