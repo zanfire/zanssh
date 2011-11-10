@@ -4,5 +4,6 @@ libzanssh_a_SOURCES = \
 	SSHPacket.cpp \
 	SSHMessage.cpp \
 	SSHMessageKeyInit.cpp \
-	SSHTransport.cpp
+	SSHTransport.cpp \
+	SSHTransportListener.cpp
 

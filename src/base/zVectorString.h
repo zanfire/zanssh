@@ -38,6 +38,7 @@ public:
 
   int contains(zString const& element) const;
 
+  zString toString(zString sep) const;
 };
 
 #endif

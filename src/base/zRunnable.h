@@ -17,19 +17,13 @@
 #ifndef RUNNABLE_H__
 #define RUNNABLE_H__
 
-class zRunnable {
-protected:
-  bool _canRun;
+class zRunnable : virtual public zObject {
 public:
-	zRunnable(void) {
-	  _canRun = true;
-	}
-
+	zRunnable(void) : zObject() {}
 	virtual ~zRunnable(void) {}
 
 	virtual int run(void* param) = 0;
-
-	void stop(void) { _canRun = false; }
+	virtual void stop(void) = 0;
 };
 
 #endif // RUNNABLE_H__

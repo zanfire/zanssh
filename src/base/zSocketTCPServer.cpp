@@ -21,12 +21,13 @@
 #include "zSocketTCPConnection.h"
 #include "zSocketAddressIPv4.h"
 #include "zSocketAddressIPv6.h"
+#include "zSocketTCPServerListener.h"
 
 #include <errno.h>
 #include <netinet/in.h>
 
-zSocketTCPServer::zSocketTCPServer(void) : zSocketTCP() {
-
+zSocketTCPServer::zSocketTCPServer(void) : zSocketTCP(), zRunnable() {
+  _thread = new zThread(this);
 }
 
 
@@ -46,16 +47,40 @@ zSocketTCPConnection* zSocketTCPServer::accept(void) {
   socklen_t fromAddrLen;
   int res = ::accept(_desc, &fromAddr, &fromAddrLen);
   if (res >= 0) {
-    if (_bindAddress->getType() == zSocketAddress::ADDRESS_TYPE_IPv4) {
+   if (_bindAddress->getType() == zSocketAddress::ADDRESS_TYPE_IPv4) {
       sockaddr_in* addr = (sockaddr_in*)&fromAddr;
       zSocketAddressIPv4 zaddr(*addr);
-      return new zSocketTCPConnection((SOCKET_DESC)res, _bindAddress, &zaddr);
+      return new zSocketTCPConnection(this, &zaddr);
     }
     else {
       sockaddr_in6* addr = (sockaddr_in6*)&fromAddr;
       zSocketAddressIPv6 zaddr(addr->sin6_addr);
-      return new zSocketTCPConnection((SOCKET_DESC)res, _bindAddress, &zaddr);
+      return new zSocketTCPConnection(this, &zaddr);
     }
   }
   return NULL;
+}
+
+
+int zSocketTCPServer::run(void* param) {
+
+  /*zSocketBase::SocketError error = _serverSocket.listen();
+  if (error != zSocketBase::SOCKET_OK) {
+    _logger->fatal("listen failed!");
+   }
+
+  while (true) {
+    zSocketTCPConnection* connection = _serverSocket.accept();
+    if (connection == NULL) {
+      _logger->warn("Socket accept is failed due to an unspecified error condition.")
+    }
+    else {
+      //
+      SSHTransport* transport = new SSHTransport(connection);
+      transport->initialize();
+      _activeTransports.append(transport);
+    }
+  }*/
+
+  return 0;
 }

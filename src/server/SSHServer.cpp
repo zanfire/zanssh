@@ -52,24 +52,3 @@ void SSHServer::stop(void) {
 }
 
 
-int SSHServer::run(void* param) {
-  zSocketBase::SocketError error = _serverSocket.listen();
-  if (error != zSocketBase::SOCKET_OK) {
-    _logger->fatal("listen failed!");
-   }
-
-  while (_canRun) {
-    zSocketTCPConnection* connection = _serverSocket.accept();
-
-    if (connection == NULL) {
-      _logger->debug("connection null!");
-    }
-    else {
-      SSHTransport* transport = new SSHTransport(connection);
-      transport->initialize();
-      _activeTransports.append(transport);
-    }
-  }
-
-  return 0;
-}

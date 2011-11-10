@@ -58,7 +58,7 @@ public:
 
   THREAD_ID getThreadID() {return _threadID; }
   void start(void* param = NULL);
-  void stop(bool blocking);
+  void stop(void);
   zRunnable* getRunnable() { return _runnable; }
 
   void join();

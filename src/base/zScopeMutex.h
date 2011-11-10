@@ -27,6 +27,7 @@ protected:
 
 public:
   zScopeMutex(zMutex* mtx);
+  zScopeMutex(zMutex& mtx);
   virtual ~zScopeMutex(void);
 };
 

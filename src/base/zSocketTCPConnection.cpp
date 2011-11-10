@@ -17,27 +17,43 @@
 #include "zSocketTCPConnection.h"
 
 #include "zLogger.h"
+#include "zThread.h"
+#include "zScopeMutex.h"
+#include "zSocketTCP.h"
 
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
-zSocketTCPConnection::zSocketTCPConnection(SOCKET_DESC desc,
-    zSocketAddress* localAddr, zSocketAddress* remoteAddr) {
-  _desc = desc;
-  _localAddr = localAddr->clone();
+zSocketTCPConnection::zSocketTCPConnection(zSocketTCP* socket, zSocketAddress* remoteAddr) : zObject(), zRunnable() {
+  _socket = socket;
+  _socket->acquireReference();
+
   _remoteAddr = remoteAddr->clone();
+  _mustStop = false;
+  _thread = new zThread(this);
+  _thread->start(NULL);
 }
 
 
 zSocketTCPConnection::~zSocketTCPConnection(void) {
-  _localAddr->releaseReference();
+  setListener(NULL);
+  _thread->stop();
   _remoteAddr->releaseReference();
+  _socket->releaseReference();
+}
+
+
+void zSocketTCPConnection::setListener(zSocketTCPConnectionListener* listener) {
+  zScopeMutex scope(_mtx);
+  if (_listener != NULL) _listener->releaseReference();
+  _listener = listener;
+  if (_listener != NULL) _listener->acquireReference();
 }
 
 
 int zSocketTCPConnection::writeBytes(unsigned char* buffer, int bufferSize) {
-  int res = send(_desc, buffer, bufferSize, 0);
+  int res = send(_socket->getDescriptor(), buffer, bufferSize, 0);
     if (res == -1) {
       zLogger::getLogger("base")->info("Failed errno %d.", errno);
     }
@@ -45,10 +61,34 @@ int zSocketTCPConnection::writeBytes(unsigned char* buffer, int bufferSize) {
 }
 
 
-int zSocketTCPConnection::readBytes(unsigned char* buffer, int bufferSize) {
-  int res = recv(_desc, buffer, bufferSize, 0);
-  if (res == -1) {
-    zLogger::getLogger("base")->info("Failed errno %d.", errno);
+void zSocketTCPConnection::stop(void) {
+  _socket->close();
+}
+
+
+int zSocketTCPConnection::run(void* param) {
+  unsigned char buffer[64 * 1024];
+
+  while (_mustStop) {
+    int readBytes = recv(_socket->getDescriptor(), buffer, sizeof(buffer), 0);
+    if (readBytes > 0) {
+      zScopeMutex scope(_mtx);
+      if (_listener != NULL) _listener->onIncomingData(buffer, readBytes);
+    }
+    else {
+      // Handle error.
+      zLogger::getLogger("base")->info("Failed errno %d.", errno);
+
+      //EAGAIN or EWOULDBLOCK
+      //EBADF  The argument sockfd is an invalid descriptor.
+      //ECONNREFUSED
+      //EFAULT The receive buffer pointer(s) point outside the process's address space.
+      //EINTR  The receive was interrupted by delivery of a signal before any data were available; see signal(7).
+      //EINVAL Invalid argument passed.
+      //ENOMEM Could not allocate memory for recvmsg().
+      //ENOTCONN
+      //ENOTSOCK
+    }
   }
-  return res;
+  return 0;
 }

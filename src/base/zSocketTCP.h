@@ -30,8 +30,8 @@ public:
 
 protected:
   virtual SocketError impl_bind(void);
-  virtual SocketError impl_createSocket(SOCKET_DESC& desc);
-
+  virtual SocketError impl_create(void);
+  virtual SocketError impl_close(void);
 };
 
 #endif // SOCKETTCP_H__

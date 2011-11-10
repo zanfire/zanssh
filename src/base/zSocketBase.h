@@ -61,6 +61,7 @@ public:
   virtual ~zSocketBase(void);
 
   SocketError bindTo(zSocketAddress const& address);
+  SocketError close(void);
 
   SocketType getType(void) const { return _type; }
   SOCKET_DESC getDescriptor(void) const { return _desc; }
@@ -69,7 +70,8 @@ public:
 
 protected:
   virtual SocketError impl_bind(void) = 0;
-  virtual SocketError impl_createSocket(SOCKET_DESC& desc) = 0;
+  virtual SocketError impl_create(void) = 0;
+  virtual SocketError impl_close(void) = 0;
 
 };
 

@@ -18,6 +18,7 @@
 
 #include "zScopeMutex.h"
 #include "zMutex.h"
+#include "zStringBuffer.h"
 
 #include <stdlib.h>
 
@@ -81,4 +82,16 @@ int zVectorString::contains(zString const& element) const {
     }
   }
   return -1;
+}
+
+
+zString zVectorString::toString(zString sep) const {
+  zStringBuffer strb;
+  for (int i = 0; i < _count; i++) {
+    strb.append(*((zString*)_vector[i]));
+    if (i < (_count - 1)) {
+      strb.append(sep);
+    }
+  }
+  return strb.toString();
 }

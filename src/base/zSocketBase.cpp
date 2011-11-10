@@ -32,13 +32,20 @@ zSocketBase::SocketError zSocketBase::bindTo(zSocketAddress const& address) {
   }
 
   _bindAddress = address.clone();
-  SocketError res = impl_createSocket(_desc);
+  SocketError res = impl_create();
   if (res != SOCKET_OK) return res;
   if (_desc == INVALID_DESCRIPTOR) {
     return SOCKET_ERROR_CREATE_DESC;
   }
 
   return impl_bind();
+}
+
+
+zSocketBase::SocketError zSocketBase::close(void) {
+  if (_desc != INVALID_DESCRIPTOR) return SOCKET_ERROR_GENERIC;
+
+  return impl_close();
 }
 
 

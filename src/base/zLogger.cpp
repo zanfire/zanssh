@@ -89,6 +89,14 @@ void zLogger::error(char const* format, ...) {
 }
 
 
+void zLogger::warn(char const* format, ...) {
+  va_list args;
+  va_start(args, format);
+  log(LOG_LEVEL_WARN, format, args);
+  va_end(args);
+}
+
+
 void zLogger::info(char const* format, ...) {
   va_list ap;
   va_start(ap, format);

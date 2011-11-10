@@ -23,11 +23,14 @@
 #include <string.h>
 
 
-SSHTransport::SSHTransport(zSocketTCPConnection* connection) : zRunnable(), zObject() {
+SSHTransport::SSHTransport(zSocketTCPConnection* connection) : zObject(), zRunnable() {
   _logger = zLogger::getLogger("SSHServer");
   _initialized = false;
 
+  //
   _state = SSH_TRANSPORT_STATE_UNKNOWN;
+  _keyNegoState = SSH_KEY_NEGO_STATE_UNKNOWN;
+
   _connection = connection;
   _connection->acquireReference();
 
@@ -36,9 +39,7 @@ SSHTransport::SSHTransport(zSocketTCPConnection* connection) : zRunnable(), zObj
 
 
 SSHTransport::~SSHTransport() {
-  _readThread->stop(true);
   _connection->releaseReference();
-  _readThread->releaseReference();
 
 }
 
@@ -57,28 +58,6 @@ void SSHTransport::initialize(void) {
   _logger->debug("SSHTransport is initialized correctly.");
 }
 
-
-int SSHTransport::run(void* param) {
-  unsigned char buffer[64 * 1024];
-
-  while (_canRun) {
-    if (!_connection->isValid()) {
-      _logger->error("Connection is broken, terminating read operation.");
-      break;
-    }
-    // From spec must handled at least 35 Kb of data per packet.
-
-    int readBytes = _connection->readBytes(buffer, sizeof(buffer));
-    if (readBytes > 0) {
-      onIncomingData(buffer, readBytes);
-    }
-    else {
-      _logger->error("Error.");
-      zThread::sleep(1000);
-    }
-  }
-  return 0;
-}
 
 
 
@@ -104,37 +83,12 @@ void SSHTransport::onIncomingData(unsigned char* buffer, int bufferSize) {
   }
 
   if (bufferSize > 0) {
-
-    // Expceted an SSH packet
-    //SSHMessage message(buffer, bufferSize);
-    SSHMessageKeyInit message(buffer, bufferSize);
-    _logger->debug("------------------------------");
-    zVectorString v = message.getKexAlgorithms();
-    for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-    _logger->debug("------------------------------");
-    v = message.getServerHostKeyAlgorithms();
-    for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-    _logger->debug("------------------------------");
-    v = message.getEncryptionAlgorithmsClientToServer();
-    for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-    _logger->debug("------------------------------");
-    v = message.getEncryptionAlgorithmsServerToClient();
-    for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-    _logger->debug("------------------------------");
-    v = message.getMacAlgorithmsClientToServer();
-    for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-    _logger->debug("------------------------------");
-    v = message.getCompressionAlgorithmsClientToServer();
-    for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-    _logger->debug("------------------------------");
-    v = message.getCompressionAlgorithmsServerToClient();
-    for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-    _logger->debug("------------------------------");
-    v = message.getLanguagesClientToServer();
-    for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-    _logger->debug("------------------------------");
-    v = message.getLanguagesServerToClient();
-    for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+    SSHMessage message(buffer, bufferSize);
+    if (message.getMessageType() == SSHMessage::SSH_MSG_KEXINIT) {
+      SSHMessageKeyInit keyInit(buffer, bufferSize);
+      _keyNegoState |= SSH_KEY_NEGO_STATE_KEY_INIT_RECEIVED;
+    }
+    //else if (message.getMessageType() == SSHMessage:SSH_MS) {
   }
 }
 
@@ -160,3 +114,10 @@ void SSHTransport::sendHelloMessage(void) {
 }
 
 
+void SSHTransport::sendMessageKeyInit(void) {
+  unsigned char buffer[1024 * 64];
+  SSHMessageKeyInit key(buffer, sizeof(buffer));
+
+  key.initPacket();
+
+}

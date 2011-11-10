@@ -20,15 +20,23 @@
 #include "zSocketTCP.h"
 
 class zSocketTCPConnection;
+class zThread;
+class zSocketTCPServerListener;
 
-class zSocketTCPServer : public zSocketTCP {
+class zSocketTCPServer : public zSocketTCP, public zRunnable {
 protected:
+  zThread* _thread;
+  zMutex _mtx;
+  zSocketTCPServerListener* _listener;
 
 public:
 	zSocketTCPServer(void);
 	virtual ~zSocketTCPServer(void);
 
-	SocketError listen(void);
+	SocketError startListen(void);
+	SocketError stopListen(void);
+
+protected:
 	zSocketTCPConnection* accept(void);
 };
 

@@ -43,6 +43,7 @@ public:
     LOG_LEVEL_NONE      = 0x00,
     LOG_LEVEL_DEBUG,
     LOG_LEVEL_INFO,
+    LOG_LEVEL_WARN,
     LOG_LEVEL_ERROR,
     LOG_LEVEL_FATAL
   };
@@ -63,6 +64,7 @@ public:
 
   void fatal(char const* format, ...);
   void error(char const* format, ...);
+  void warn(char const* format, ...);
   void info(char const* format, ...);
   void debug(char const* format, ...);
 

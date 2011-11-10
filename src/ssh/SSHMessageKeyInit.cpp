@@ -19,13 +19,85 @@
 #include "zStringBuffer.h"
 #include "zStringTokenizer.h"
 
-
+#include <arpa/inet.h>
 
 SSHMessageKeyInit::SSHMessageKeyInit(unsigned char* buffer, int bufferSize) : SSHMessage(buffer, bufferSize) {
 }
 
 
 SSHMessageKeyInit::~SSHMessageKeyInit(void) {
+}
+
+
+bool SSHMessageKeyInit::setKexAlgorithms(zVectorString const& v) {
+  zString kex = v.toString(zString(","));
+
+  setPacketLength(getPacketLength() + kex.getLength() + 4);
+
+  int messageSize = -1;
+  unsigned char* message = getMessage(messageSize);
+  if (message == NULL || messageSize <= SSH_MSG_KEXINIT_COOKIE_SIZE) {
+    return false;
+  }
+  // Skip cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
+
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setServerHostKeyAlgorithms(zVectorString const& v) {
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setEncryptionAlgorithmsClientToServer(zVectorString const& v) {
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setEncryptionAlgorithmsServerToClient(zVectorString const& v) {
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setMacAlgorithmsClientToServer(zVectorString const& v) {
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setMacAlgorithmsServerToClient(zVectorString const& v) {
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setCompressionAlgorithmsClientToServer(zVectorString const& v) {
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setCompressionAlgorithmsServerToClient(zVectorString const& v) {
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setLanguagesClientToServer(zVectorString const& v) {
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setLanguagesServerToClient(zVectorString const& v) {
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setFirstKexPacketFollows(bool v) {
+  return false;
+}
+
+
+bool SSHMessageKeyInit::setReserved(uint32_t v) {
+  return false;
 }
 
 
@@ -273,10 +345,73 @@ zVectorString SSHMessageKeyInit::getLanguagesServerToClient(void) const {
 
 
 bool SSHMessageKeyInit::getFirstKexPacketFollows(void) const {
+  int messageSize = -1;
+  unsigned char* message = getMessage(messageSize);
+  if (message == NULL || messageSize <= SSH_MSG_KEXINIT_COOKIE_SIZE) {
+    return false;
+  }
+  // Skip cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+
+  if (message != NULL && messageSize >= 1) {
+    return (message[0] == 0);
+  }
   return false;
 }
 
 
 uint32_t SSHMessageKeyInit::getReserved(void) const {
+  int messageSize = -1;
+  unsigned char* message = getMessage(messageSize);
+  if (message == NULL || messageSize <= SSH_MSG_KEXINIT_COOKIE_SIZE) {
+    return 0;
+  }
+  // Skip cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipBytes(1, &message, messageSize);
+
+  if (message != NULL && messageSize == 4) {
+    return ntohl(((uint32_t*)message)[0]);
+  }
   return 0;
+
+  return 0;
+}
+
+
+zString SSHMessageKeyInit::toString(void) const {
+  zStringBuffer strb;
+  //zVectorString v = getKexAlgorithms();
+  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+  //v = message.getServerHostKeyAlgorithms();
+  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+  //v = message.getEncryptionAlgorithmsClientToServer();
+  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+  //v = message.getEncryptionAlgorithmsServerToClient();
+  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+  //v = message.getMacAlgorithmsClientToServer();
+  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+  //v = message.getCompressionAlgorithmsClientToServer();
+  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+  //v = message.getCompressionAlgorithmsServerToClient();
+  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+  //v = message.getLanguagesClientToServer();
+  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+  //v = message.getLanguagesServerToClient();
+  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+  return strb.toString();
 }

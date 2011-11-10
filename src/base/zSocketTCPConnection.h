@@ -18,28 +18,41 @@
 #define SOCKETTCPCONNECTION_H__
 
 #include "global.h"
+#include "zObject.h"
+#include "zRunnable.h"
+#include "zMutex.h"
 #include "zSocketTCP.h"
+#include "zSocketTCPConnectionListener.h"
 
 
 class zSocketAddress;
+class zThread;
+class zSocketTCP;
 
-class zSocketTCPConnection : public zObject {
+class zSocketTCPConnection : public zRunnable, virtual public zObject {
 protected:
-  SOCKET_DESC _desc;
-  zSocketAddress* _localAddr;
-  int _localPort;
+  zSocketTCP* _socket;
   zSocketAddress* _remoteAddr;
   int _remotePort;
+  bool _mustStop;
+  //
+  zMutex _mtx;
+  zThread* _thread;
+  zSocketTCPConnectionListener* _listener;
 
 public:
-  zSocketTCPConnection(SOCKET_DESC desc, zSocketAddress* localAddr, zSocketAddress* remoteAddr);
-
+  zSocketTCPConnection(zSocketTCP* socket, zSocketAddress* remoteAddr);
   virtual ~zSocketTCPConnection(void);
 
+  void setListener(zSocketTCPConnectionListener* listener);
   int writeBytes(unsigned char* buffer, int bufferSize);
-  int readBytes(unsigned char* buffer, int bufferSize);
 
-  bool isValid(void) { return true; }
+protected:
+  // zRunnable implementation
+  int run(void* param);
+  void stop(void);
+
+  int readBytes(unsigned char* buffer, int bufferSize);
 };
 
 #endif // SOCKETTCPCONNECTION_H__

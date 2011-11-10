@@ -69,7 +69,7 @@ zThread::zThread(zRunnable* runnable) : zObject() {
 
 
 zThread::~zThread(void) {
-  stop(true);
+  stop();
 }
 
 
@@ -108,13 +108,12 @@ void zThread::start(void* param) {
     // thread creation failed.
   }
 #endif
-} 
+}
 
-void zThread::stop(bool blocking) {
-  _runnable->stop();
-  if(blocking) {
-    _mtxRunning.sync();
-  }
+
+void zThread::stop(void) {
+
+  _mtxRunning.sync();
 }
 
 
@@ -127,4 +126,3 @@ void zThread::join() {
     // ERROR
   }
 }
-

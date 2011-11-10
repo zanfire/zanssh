@@ -28,7 +28,7 @@
 
 class zLogger;
 
-class SSHServer : public zObject, zRunnable {
+class SSHServer : virtual public zObject, public zRunnable {
 protected:
   zLogger* _logger;
   zThread _thread;

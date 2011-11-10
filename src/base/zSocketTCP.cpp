@@ -60,7 +60,7 @@ zSocketBase::SocketError zSocketTCP::impl_bind(void) {
 }
 
 
-zSocketBase::SocketError zSocketTCP::impl_createSocket(SOCKET_DESC& desc) {
+zSocketBase::SocketError zSocketTCP::impl_create(void) {
   int domain = -1;
   if (_bindAddress->getType() == zSocketAddress::ADDRESS_TYPE_IPv4) {
     domain = AF_INET;
@@ -72,7 +72,15 @@ zSocketBase::SocketError zSocketTCP::impl_createSocket(SOCKET_DESC& desc) {
     return SOCKET_ERROR_INVALID_ADDRESS;
   }
 
-  desc = socket(domain, SOCK_STREAM, 0);
+  _desc = socket(domain, SOCK_STREAM, 0);
   return SOCKET_OK;
 }
 
+
+zSocketBase::SocketError zSocketTCP::impl_close(void) {
+  int ret = shutdown(_desc, SHUT_RDWR);
+  if (ret == -1) {
+    // TODO: Handle errors.
+  }
+  return SOCKET_OK;
+}

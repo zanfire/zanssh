@@ -76,6 +76,7 @@
 
 #include "zStringBuffer.h"
 
+#include <string.h>
 #include <arpa/inet.h>
 
 
@@ -89,6 +90,11 @@ SSHPacket::SSHPacket(unsigned char* buffer, int bufferSize) : zObject() {
 SSHPacket::~SSHPacket(void) {
 }
 
+
+void SSHPacket::initPacket() {
+  memset(_buffer, 0x00, _bufferSize);
+
+}
 
 
 bool SSHPacket::setPacketLength(int length) {
