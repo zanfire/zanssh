@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 zMutex::zMutex(void) {
+  _lockedCount = 0;
   _isDestroying = false;
 
 #if defined(_WIN32)
@@ -62,15 +63,21 @@ void zMutex::lock() {
   int res = pthread_mutex_lock(&_mutex);
   CHECK_FATAL(res, "pthread_mutex_lock");
 #endif
-
+  _lockedCount++;
 }
 
 
 void zMutex::unlock() {
+  _lockedCount--;
 #if defined(_WIN32)
   LeaveMutex((LPCRITICAL_SECTION)_cs);
 #else
   int res = pthread_mutex_unlock(&_mutex);
   CHECK_FATAL(res, "pthread_mutex_unlock");
 #endif
+}
+
+
+bool zMutex::isLocked(void) const {
+  return _lockedCount > 0;
 }

@@ -19,9 +19,12 @@
 #include "zLogger.h"
 #include "zSocketTCPConnection.h"
 #include "SSHTransport.h"
+#include "zThread.h"
 
-SSHServer::SSHServer(void) : zRunnable(), _thread(this) {
+
+SSHServer::SSHServer(void) : zObject(), zRunnable() {
   _logger = zLogger::getLogger("SSHServer");
+  _thread = new zThread(this);
 }
 
 
@@ -43,12 +46,15 @@ SSHServer* SSHServer::createSSHServer(zSocketAddress const& bindAddress) {
 
 
 void SSHServer::start(void) {
-  _thread.start();
+  _thread->start();
 }
 
 
 void SSHServer::stop(void) {
-
+  //_thread->start();
 }
 
 
+int SSHServer::run(void* param) {
+  return 0;
+}

@@ -17,13 +17,15 @@
 #ifndef RUNNABLE_H__
 #define RUNNABLE_H__
 
+#include "global.h"
+#include "zObject.h"
+
 class zRunnable : virtual public zObject {
 public:
 	zRunnable(void) : zObject() {}
 	virtual ~zRunnable(void) {}
 
 	virtual int run(void* param) = 0;
-	virtual void stop(void) = 0;
 };
 
 #endif // RUNNABLE_H__

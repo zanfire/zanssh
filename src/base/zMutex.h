@@ -30,22 +30,25 @@
 class zMutex {
   
 private:
-	MUTEX_TYPE _mutex;
-	bool _isDestroying;
+  int _lockedCount;
+  MUTEX_TYPE _mutex;
+  bool _isDestroying;
 
 public:
-	zMutex(void);
-	virtual ~zMutex(void);
+  zMutex(void);
+  virtual ~zMutex(void);
 
-	void lock(void);
-	void unlock(void);
+  void lock(void);
+  void unlock(void);
 
-	void sync(void) { lock(); unlock(); }
+  void sync(void) { lock(); unlock(); }
 
-	// Get the implementation object used by Mutex object.
-	// NOTE: Return a pointer to an object valid only for the life of Mutex object.
-	// NOTE: System specific method.
-	MUTEX_TYPE* getImplementationMutex(void) { return &_mutex; }
+  // Get the implementation object used by Mutex object.
+  // NOTE: Return a pointer to an object valid only for the life of Mutex object.
+  // NOTE: System specific method.
+  MUTEX_TYPE* getImplementationMutex(void) { return &_mutex; }
+
+  bool isLocked(void) const;
 };
 
 #endif // ZMUTEX_H__

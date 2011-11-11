@@ -14,9 +14,11 @@
  * limitations under the License.
  *****************************************************************************/
 
-#ifndef SOCKETTCPSERVER_H__
-#define SOCKETTCPSERVER_H__
+#ifndef ZSOCKETTCPSERVER_H__
+#define ZSOCKETTCPSERVER_H__
 
+#include "zMutex.h"
+#include "zRunnable.h"
 #include "zSocketTCP.h"
 
 class zSocketTCPConnection;
@@ -28,16 +30,21 @@ protected:
   zThread* _thread;
   zMutex _mtx;
   zSocketTCPServerListener* _listener;
+  bool _mustStop;
+  bool _socketListening;
 
 public:
 	zSocketTCPServer(void);
 	virtual ~zSocketTCPServer(void);
 
+	void setListener(zSocketTCPServerListener* listener);
+
 	SocketError startListen(void);
 	SocketError stopListen(void);
 
+	virtual int run(void* param);
 protected:
 	zSocketTCPConnection* accept(void);
 };
 
-#endif // SOCKETTCPSERVER_H__
+#endif // ZSOCKETTCPSERVER_H__

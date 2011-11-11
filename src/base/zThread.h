@@ -60,6 +60,7 @@ public:
   void start(void* param = NULL);
   void stop(void);
   zRunnable* getRunnable() { return _runnable; }
+  bool isRunning() { return _mtxRunning.isLocked(); }
 
   void join();
 };

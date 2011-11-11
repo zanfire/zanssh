@@ -17,6 +17,8 @@
 #include "zSocketTCPServer.h"
 
 #include "zLogger.h"
+#include "zThread.h"
+#include "zScopeMutex.h"
 #include "zSocketAddress.h"
 #include "zSocketTCPConnection.h"
 #include "zSocketAddressIPv4.h"
@@ -27,18 +29,46 @@
 #include <netinet/in.h>
 
 zSocketTCPServer::zSocketTCPServer(void) : zSocketTCP(), zRunnable() {
+  _listener = NULL;
+  _mustStop = true;
+  _socketListening = false;
   _thread = new zThread(this);
 }
 
 
 zSocketTCPServer::~zSocketTCPServer(void) {
+  setListener(NULL);
+  stopListen();
 }
 
 
-zSocketBase::SocketError zSocketTCPServer::listen() {
-  //cat /proc/sys/net/core/somaxconn
-  int result = ::listen(_desc, 128);
-  return result == 0 ? SOCKET_OK : SOCKET_ERROR_GENERIC;
+void zSocketTCPServer::setListener(zSocketTCPServerListener* listener) {
+  zScopeMutex scope(_mtx);
+  if (_listener != NULL) _listener->releaseReference();
+  _listener = listener;
+  if (_listener != NULL) _listener->acquireReference();
+}
+
+
+zSocketBase::SocketError zSocketTCPServer::startListen() {
+  int res = -1;
+  if (!_socketListening) {
+    //cat /proc/sys/net/core/somaxconn
+    res = ::listen(_desc, 128);
+    if (res == 0) _socketListening = true;
+  }
+  if (!_thread->isRunning()) _thread->start(NULL);
+  return res == 0 ? SOCKET_OK : SOCKET_ERROR_GENERIC;
+}
+
+
+zSocketBase::SocketError zSocketTCPServer::stopListen() {
+  if (!_thread->isRunning()) {
+    _mustStop = true;
+    shutdown(_desc, SHUT_RDWR);
+    _thread->stop();
+  }
+  return _socketListening ? SOCKET_OK : SOCKET_ERROR_GENERIC;
 }
 
 
@@ -63,24 +93,26 @@ zSocketTCPConnection* zSocketTCPServer::accept(void) {
 
 
 int zSocketTCPServer::run(void* param) {
+  _mtx.lock();
+  if (_listener != NULL) _listener->onStartListening();
+  _mtx.unlock();
 
-  /*zSocketBase::SocketError error = _serverSocket.listen();
-  if (error != zSocketBase::SOCKET_OK) {
-    _logger->fatal("listen failed!");
-   }
-
-  while (true) {
-    zSocketTCPConnection* connection = _serverSocket.accept();
+  while (!_mustStop) {
+    // Blocking.
+    zSocketTCPConnection* connection = accept();
     if (connection == NULL) {
-      _logger->warn("Socket accept is failed due to an unspecified error condition.")
+      //_logger->warn("Socket accept is failed due to an unspecified error condition.");
+      continue;
     }
-    else {
-      //
-      SSHTransport* transport = new SSHTransport(connection);
-      transport->initialize();
-      _activeTransports.append(transport);
-    }
-  }*/
+
+    _mtx.lock();
+    if (_listener != NULL) _listener->onAccept(connection);
+    _mtx.unlock();
+    connection->releaseReference();
+  }
+  _mtx.lock();
+  if (_listener != NULL) _listener->onStopListening();
+  _mtx.unlock();
 
   return 0;
 }

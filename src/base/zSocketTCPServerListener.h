@@ -14,8 +14,8 @@
  * limitations under the License.
  *****************************************************************************/
 
-#ifndef SOCKETTCPSERVERLISTENER_H__
-#define SOCKETTCPSERVERLISTENER_H__
+#ifndef ZSOCKETTCPSERVERLISTENER_H__
+#define ZSOCKETTCPSERVERLISTENER_H__
 
 #include "zSocketTCP.h"
 
@@ -28,7 +28,9 @@ public:
   zSocketTCPServerListener(void);
 	virtual ~zSocketTCPServerListener(void);
 
-	virtual onAccept(zSocketTCPConnection* connection);
+	virtual void onAccept(zSocketTCPConnection* connection) = 0;
+	virtual void onStartListening(void) {};
+	virtual void onStopListening(void) {};
 };
 
-#endif // SOCKETTCPSERVERLISTENER_H__
+#endif // ZSOCKETTCPSERVERLISTENER_H__

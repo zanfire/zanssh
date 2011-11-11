@@ -20,18 +20,18 @@
 #include "global.h"
 #include "zObject.h"
 #include "zSocketAddress.h"
-#include "zThread.h"
 #include "zRunnable.h"
 #include "zVector.h"
 #include "zSocketTCPServer.h"
 
 
+class zThread;
 class zLogger;
 
-class SSHServer : virtual public zObject, public zRunnable {
+class SSHServer : public zRunnable, virtual public zObject {
 protected:
   zLogger* _logger;
-  zThread _thread;
+  zThread* _thread;
   zSocketTCPServer _serverSocket;
   zVector _activeTransports;
 

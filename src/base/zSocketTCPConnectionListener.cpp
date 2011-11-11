@@ -14,41 +14,14 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "zSocketTCPConnection.h"
+#include "zSocketTCPConnectionListener.h"
 
 #include "zLogger.h"
 
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 
-zSocketTCPConnection::zSocketTCPConnection(SOCKET_DESC desc,
-    zSocketAddress* localAddr, zSocketAddress* remoteAddr) {
-  _desc = desc;
-  _localAddr = localAddr->clone();
-  _remoteAddr = remoteAddr->clone();
+zSocketTCPConnectionListener::zSocketTCPConnectionListener(void) {
 }
 
 
-zSocketTCPConnection::~zSocketTCPConnection(void) {
-  _localAddr->releaseReference();
-  _remoteAddr->releaseReference();
-}
-
-
-int zSocketTCPConnection::writeBytes(unsigned char* buffer, int bufferSize) {
-  int res = send(_desc, buffer, bufferSize, 0);
-    if (res == -1) {
-      zLogger::getLogger("base")->info("Failed errno %d.", errno);
-    }
-    return res;
-}
-
-
-int zSocketTCPConnection::readBytes(unsigned char* buffer, int bufferSize) {
-  int res = recv(_desc, buffer, bufferSize, 0);
-  if (res == -1) {
-    zLogger::getLogger("base")->info("Failed errno %d.", errno);
-  }
-  return res;
+zSocketTCPConnectionListener::~zSocketTCPConnectionListener(void) {
 }

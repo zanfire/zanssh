@@ -22,7 +22,9 @@ libzanbase_a_SOURCES = \
 	zSocketTCP.cpp \
 	zSocketTCPClient.cpp \
 	zSocketTCPServer.cpp \
+	zSocketTCPServerListener.cpp \
 	zSocketTCPConnection.cpp \
+	zSocketTCPConnectionListener.cpp \
 	zLogger.cpp \
 	zLoggerAppender.cpp \
 	zLoggerAppenderConsole.cpp

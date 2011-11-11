@@ -14,48 +14,13 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "zSocketTCPServer.h"
+#include "zSocketTCPServerListener.h"
 
-#include "zLogger.h"
-#include "zSocketAddress.h"
-#include "zSocketTCPConnection.h"
-#include "zSocketAddressIPv4.h"
-#include "zSocketAddressIPv6.h"
 
-#include <errno.h>
-#include <netinet/in.h>
-
-zSocketTCPServer::zSocketTCPServer(void) : zSocketTCP() {
+zSocketTCPServerListener::zSocketTCPServerListener(void) : zObject() {
 
 }
 
 
-zSocketTCPServer::~zSocketTCPServer(void) {
-}
-
-
-zSocketBase::SocketError zSocketTCPServer::listen() {
-  //cat /proc/sys/net/core/somaxconn
-  int result = ::listen(_desc, 128);
-  return result == 0 ? SOCKET_OK : SOCKET_ERROR_GENERIC;
-}
-
-
-zSocketTCPConnection* zSocketTCPServer::accept(void) {
-  sockaddr fromAddr;
-  socklen_t fromAddrLen;
-  int res = ::accept(_desc, &fromAddr, &fromAddrLen);
-  if (res >= 0) {
-   if (_bindAddress->getType() == zSocketAddress::ADDRESS_TYPE_IPv4) {
-      sockaddr_in* addr = (sockaddr_in*)&fromAddr;
-      zSocketAddressIPv4 zaddr(*addr);
-      return new zSocketTCPConnection(this, &zaddr);
-    }
-    else {
-      sockaddr_in6* addr = (sockaddr_in6*)&fromAddr;
-      zSocketAddressIPv6 zaddr(addr->sin6_addr);
-      return new zSocketTCPConnection(this, &zaddr);
-    }
-  }
-  return NULL;
+zSocketTCPServerListener::~zSocketTCPServerListener(void) {
 }

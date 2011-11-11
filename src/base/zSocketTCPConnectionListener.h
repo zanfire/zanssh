@@ -14,11 +14,11 @@
  * limitations under the License.
  *****************************************************************************/
 
-#ifndef SOCKETTCPCONNECTIONLISTENER_H__
-#define SOCKETTCPCONNECTIONLISTENER_H__
+#ifndef ZSOCKETTCPCONNECTIONLISTENER_H__
+#define ZSOCKETTCPCONNECTIONLISTENER_H__
 
 #include "global.h"
-#include "zSocketTCPConnection.h"
+#include "zObject.h"
 
 
 class zSocketTCPConnectionListener : virtual public zObject {
@@ -27,7 +27,7 @@ public:
   virtual ~zSocketTCPConnectionListener(void);
 
   virtual void onIncomingData(unsigned char* buffer, int bufferSize) = 0;
-  virtual void onDisconected(void) = 0;
+  virtual void onDisconected(void) {}
 };
 
-#endif // SOCKETTCPCONNECTIONLISTENER_H__
+#endif // ZSOCKETTCPCONNECTIONLISTENER_H__
