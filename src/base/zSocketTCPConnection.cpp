@@ -19,17 +19,16 @@
 #include "zLogger.h"
 #include "zThread.h"
 #include "zScopeMutex.h"
-#include "zSocketTCP.h"
+#include "zSocketTCPClient.h"
 
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
-zSocketTCPConnection::zSocketTCPConnection(zSocketTCP* socket, zSocketAddress* remoteAddr) : zObject(), zRunnable() {
+zSocketTCPConnection::zSocketTCPConnection(zSocketTCPClient* socket) : zObject(), zRunnable() {
   _socket = socket;
   _socket->acquireReference();
 
-  _remoteAddr = remoteAddr->clone();
   _mustStop = false;
   _thread = new zThread(this);
   _thread->start(NULL);
@@ -39,7 +38,6 @@ zSocketTCPConnection::zSocketTCPConnection(zSocketTCP* socket, zSocketAddress* r
 zSocketTCPConnection::~zSocketTCPConnection(void) {
   setListener(NULL);
   _thread->stop();
-  _remoteAddr->releaseReference();
   _socket->releaseReference();
 }
 
@@ -55,6 +53,7 @@ void zSocketTCPConnection::setListener(zSocketTCPConnectionListener* listener) {
 int zSocketTCPConnection::writeBytes(unsigned char* buffer, int bufferSize) {
   int res = send(_socket->getDescriptor(), buffer, bufferSize, 0);
     if (res == -1) {
+      if (EADDRINUSE)
       zLogger::getLogger("base")->info("Failed errno %d.", errno);
     }
     return res;
@@ -69,7 +68,7 @@ void zSocketTCPConnection::stop(void) {
 int zSocketTCPConnection::run(void* param) {
   unsigned char buffer[64 * 1024];
 
-  while (_mustStop) {
+  while (!_mustStop) {
     int readBytes = recv(_socket->getDescriptor(), buffer, sizeof(buffer), 0);
     if (readBytes > 0) {
       zScopeMutex scope(_mtx);

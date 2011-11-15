@@ -23,27 +23,30 @@
 #include <string.h>
 
 
-SSHTransport::SSHTransport(zSocketTCPConnection* connection) : zObject(), zRunnable() {
+SSHTransport::SSHTransport(zSocketTCPConnection* connection) : zObject(), zRunnable(), zSocketTCPConnectionListener() {
   _logger = zLogger::getLogger("SSHServer");
-  _initialized = false;
-
+  _mustStop = false;
   //
-  _state = SSH_TRANSPORT_STATE_UNKNOWN;
-  _keyNegoState = SSH_KEY_NEGO_STATE_UNKNOWN;
+  _state = SSH_TRANSPORT_STATE_NONE;
+  _keyNegoState = SSH_KEY_NEGO_STATE_NONE;
 
   _connection = connection;
   _connection->acquireReference();
+  _connection->setListener(this);
 
-  _readThread = new zThread(this);
+  _thread = new zThread(this);
+  _thread->start(NULL);
 }
 
 
 SSHTransport::~SSHTransport() {
   _connection->releaseReference();
-
+  _mustStop = true;
+  _thread->stop();
+  delete _thread;
 }
 
-
+/*
 void SSHTransport::initialize(void) {
   if (_initialized) {
     _logger->error("Initialization skipped, SSHTRansport is just initialized.");
@@ -51,17 +54,17 @@ void SSHTransport::initialize(void) {
   }
 
   _state = SSH_TRANSPORT_STATE_UNKNOWN;
-  _initialized = true;
+
   _readThread->start(NULL);
   sendHelloMessage();
 
   _logger->debug("SSHTransport is initialized correctly.");
 }
-
-
+*/
 
 
 void SSHTransport::onIncomingData(unsigned char* buffer, int bufferSize) {
+
   _logger->debug("Received %d bytes from remote host.",bufferSize);
 
   // Check if state machine is waiting for hello message.
@@ -85,11 +88,38 @@ void SSHTransport::onIncomingData(unsigned char* buffer, int bufferSize) {
   if (bufferSize > 0) {
     SSHMessage message(buffer, bufferSize);
     if (message.getMessageType() == SSHMessage::SSH_MSG_KEXINIT) {
-      SSHMessageKeyInit keyInit(buffer, bufferSize);
+      SSHMessageKeyInit kexinit(buffer, bufferSize);
       _keyNegoState |= SSH_KEY_NEGO_STATE_KEY_INIT_RECEIVED;
+
+      _logger->debug("Received KEXINIT: %s", kexinit.toString().getBuffer());
     }
     //else if (message.getMessageType() == SSHMessage:SSH_MS) {
   }
+
+  _event.signal();
+}
+
+
+void SSHTransport::onDisconected(void) {
+  _thread->stop();
+}
+
+
+int SSHTransport::run(void* param) {
+  while(!_mustStop) {
+    // First of all send hello message.
+    if ((_state & SSH_TRANSPORT_STATE_HELLO_SEND) == 0) {
+      sendHelloMessage();
+    }
+    // Second send Key init if Transport can and is needed.
+    if ((_state & SSH_TRANSPORT_STATE_HELLO_SEND) != 0 && (_keyNegoState & SSH_KEY_NEGO_STATE_KEY_INIT_SEND) == 0) {
+      sendMessageKeyInit();
+    }
+
+    //
+    _event.wait();
+  }
+  return 0;
 }
 
 
@@ -117,7 +147,7 @@ void SSHTransport::sendHelloMessage(void) {
 void SSHTransport::sendMessageKeyInit(void) {
   unsigned char buffer[1024 * 64];
   SSHMessageKeyInit key(buffer, sizeof(buffer));
-
   key.initPacket();
 
+  // BUilding this code.
 }

@@ -30,7 +30,7 @@ struct sockaddr;
 /**
  * Astract definition of a socket address.
  */
-class zSocketAddress : public zObject {
+class zSocketAddress {
 public:
   enum AddressType {
     ADDRESS_TYPE_IPv4,

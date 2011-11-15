@@ -49,7 +49,6 @@ public:
   };
 
 protected:
-
   zString _loggerName;
   zVector _appenders;
   LogLevel _level;

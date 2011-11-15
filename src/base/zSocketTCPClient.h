@@ -14,21 +14,25 @@
  * limitations under the License.
  *****************************************************************************/
 
-#ifndef SOCKETTCPCLIENT_H__
-#define SOCKETTCPCLIENT_H__
+#ifndef ZSOCKETTCPCLIENT_H__
+#define ZSOCKETTCPCLIENT_H__
 
 #include "global.h"
 #include "zObject.h"
+#include "zSocketTCP.h"
 
+#include <netinet/in.h>
 
-class zSocketTCPClient : public zObject {
+class zSocketAddress;
+
+class zSocketTCPClient : public zSocketTCP {
 protected:
-
+  zSocketAddress* _remoteAddress;
 public:
-	zSocketTCPClient(void);
+	zSocketTCPClient(SOCKET_DESC desc, zSocketAddress* localAddress, sockaddr const& fromAddr, socklen_t fromAddrLen);
 	virtual ~zSocketTCPClient(void);
 
 
 };
 
-#endif // SOCKETTCPCLIENT_H__
+#endif // ZSOCKETTCPCLIENT_H__

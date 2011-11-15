@@ -24,13 +24,14 @@
 #include "zSocketAddressIPv4.h"
 #include "zSocketAddressIPv6.h"
 #include "zSocketTCPServerListener.h"
+#include "zSocketTCPClient.h"
 
 #include <errno.h>
 #include <netinet/in.h>
 
 zSocketTCPServer::zSocketTCPServer(void) : zSocketTCP(), zRunnable() {
   _listener = NULL;
-  _mustStop = true;
+  _mustStop = false;
   _socketListening = false;
   _thread = new zThread(this);
 }
@@ -77,16 +78,8 @@ zSocketTCPConnection* zSocketTCPServer::accept(void) {
   socklen_t fromAddrLen;
   int res = ::accept(_desc, &fromAddr, &fromAddrLen);
   if (res >= 0) {
-   if (_bindAddress->getType() == zSocketAddress::ADDRESS_TYPE_IPv4) {
-      sockaddr_in* addr = (sockaddr_in*)&fromAddr;
-      zSocketAddressIPv4 zaddr(*addr);
-      return new zSocketTCPConnection(this, &zaddr);
-    }
-    else {
-      sockaddr_in6* addr = (sockaddr_in6*)&fromAddr;
-      zSocketAddressIPv6 zaddr(addr->sin6_addr);
-      return new zSocketTCPConnection(this, &zaddr);
-    }
+    //zSocketTCPClient* client =
+    return new zSocketTCPConnection(new zSocketTCPClient((SOCKET_DESC)res, _bindAddress, fromAddr, fromAddrLen));
   }
   return NULL;
 }

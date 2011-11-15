@@ -27,7 +27,7 @@
 #  include <sys/types.h>
 #endif
 
-zSocketAddress::zSocketAddress(AddressType type) : zObject() {
+zSocketAddress::zSocketAddress(AddressType type) {
   _type = type;
 }
 

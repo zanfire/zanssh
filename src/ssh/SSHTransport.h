@@ -22,12 +22,14 @@
 #include "zRunnable.h"
 #include "zThread.h"
 #include "zLogger.h"
+#include "zEvent.h"
 #include "zSocketTCPConnection.h"
+#include "zSocketTCPConnectionListener.h"
 
 
 class SSHTransportListener;
 
-class SSHTransport : public zRunnable, virtual public zObject {
+class SSHTransport : public zRunnable, public zSocketTCPConnectionListener, virtual public zObject {
 public:
   enum SSHTransportDisconnectedReason {
     SSH_TRANSPORT_DISCONNECTED_REASON_UNKNOWN   = 0x00,
@@ -36,24 +38,25 @@ public:
 
 protected:
   enum SSHTransportState {
-    SSH_TRANSPORT_STATE_UNKNOWN         = 0x00,
+    SSH_TRANSPORT_STATE_NONE         = 0x00,
     SSH_TRANSPORT_STATE_HELLO_SEND      = 0x01,
     SSH_TRANSPORT_STATE_HELLO_RECEIVED  = 0x02,
   };
 
   enum SSHKeyNegotiationState {
-    SSH_KEY_NEGO_STATE_UNKNOWN            = 0x00,
+    SSH_KEY_NEGO_STATE_NONE            = 0x00,
     SSH_KEY_NEGO_STATE_KEY_INIT_SEND      = 0x01,
     SSH_KEY_NEGO_STATE_KEY_INIT_RECEIVED  = 0x02,
   };
 
   zMutex* _mtx;
   zLogger* _logger;
+  bool _mustStop;
   int _state;
   int _keyNegoState;
-  zThread* _readThread;
+  zThread* _thread;
   zSocketTCPConnection* _connection;
-  bool _initialized;
+  zEvent _event;
   bool _listeners;
 
 
@@ -61,17 +64,20 @@ public:
   SSHTransport(zSocketTCPConnection* connection);
   virtual ~SSHTransport(void);
 
-  // ???
-  void initialize(void);
-
   void writeMessage(unsigned char* message, int messageSize);
-
   void setListener(SSHTransportListener* listener);
+
+  // zSocketTCPConnection listener impl.
+  virtual void onIncomingData(unsigned char* buffer, int bufferSize);
+  virtual void onDisconected(void);
+
+  // zRunnable impl.
+  virtual int run(void* param);
+
 protected:
-  void onIncomingData(unsigned char* buffer, int bufferSize);
 
   void sendHelloMessage(void);
   void sendMessageKeyInit(void);
 };
 
-#endif // SSHTransport_H__
+#endif // SSHTRANSPORT_H__

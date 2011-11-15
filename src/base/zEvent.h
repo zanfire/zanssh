@@ -36,11 +36,12 @@ protected:
   zMutex _mtx;
 
 public:
-	zEvent(void);
-	virtual ~zEvent(void);
+  zEvent(void);
+  virtual ~zEvent(void);
 
-	void wait(int timeoutMillis);
-	void signal(void);
+  // Default INFINITE.
+  void wait(int timeoutMillis = -1);
+  void signal(void);
 };
 
 #endif // ZEVENT_H__

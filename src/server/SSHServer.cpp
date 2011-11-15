@@ -22,13 +22,16 @@
 #include "zThread.h"
 
 
-SSHServer::SSHServer(void) : zObject(), zRunnable() {
+SSHServer::SSHServer(void) : zObject(), zSocketTCPServerListener() {
   _logger = zLogger::getLogger("SSHServer");
-  _thread = new zThread(this);
+  _serverSocket.setListener(this);
 }
 
 
 SSHServer::~SSHServer(void) {
+  stop();
+  // TODO: Clean-up of SSHTransactions.
+  _serverSocket.setListener(NULL);
 }
 
 
@@ -46,15 +49,16 @@ SSHServer* SSHServer::createSSHServer(zSocketAddress const& bindAddress) {
 
 
 void SSHServer::start(void) {
-  _thread->start();
+  _serverSocket.startListen();
 }
 
 
 void SSHServer::stop(void) {
-  //_thread->start();
+  _serverSocket.stopListen();
 }
 
 
-int SSHServer::run(void* param) {
-  return 0;
+void SSHServer::onAccept(zSocketTCPConnection* connection) {
+  SSHTransport* transport = new SSHTransport(connection);
+  _transports.append(transport);
 }

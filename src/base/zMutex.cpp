@@ -23,7 +23,7 @@ zMutex::zMutex(void) {
   _isDestroying = false;
 
 #if defined(_WIN32)
-	_cs = new CRITICAL_SECTION;
+  _cs = new CRITICAL_SECTION;
   InitializeMutexAndSpinCount((LPCRITICAL_SECTION)_cs, 500);
 #else
   pthread_mutexattr_t mutexAttr;
@@ -48,10 +48,10 @@ zMutex::~zMutex() {
 
 #if defined(_WIN32)
   DeleteMutex((LPCRITICAL_SECTION)_cs);
-	delete (CRITICAL_SECTION*)_cs;
+  delete (CRITICAL_SECTION*)_cs;
 #else
-	int res = pthread_mutex_destroy(&_mutex);
-	CHECK_FATAL(res, "pthread_mutex_destroy");
+  int res = pthread_mutex_destroy(&_mutex);
+  CHECK_FATAL(res, "pthread_mutex_destroy");
 #endif
 }
 

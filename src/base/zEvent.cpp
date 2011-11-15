@@ -52,17 +52,16 @@ void zEvent::wait(int timeoutMillis) {
 #if defined(_WIN32)
   DWORD res = WaitForSingleObject( _event, timeoutMillis);
 #elif HAVE_PTHREAD_H
-  timespec request_time;
-
-  request_time.tv_sec = (int)(timeoutMillis / 1000);
-  request_time.tv_nsec = (int)(timeoutMillis % 1000) * 1000;
-
   _mtx.lock();
   int success = -1;
   if (timeoutMillis < 0) {
     success = pthread_cond_wait(&_event, _mtx.getImplementationMutex());
   }
   else {
+    timespec request_time;
+
+    request_time.tv_sec = (int)(timeoutMillis / 1000);
+    request_time.tv_nsec = (int)(timeoutMillis % 1000) * 1000;
     success = pthread_cond_timedwait(&_event, _mtx.getImplementationMutex(), &request_time);
   }
 

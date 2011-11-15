@@ -23,17 +23,17 @@
 #include "zRunnable.h"
 #include "zVector.h"
 #include "zSocketTCPServer.h"
+#include "zSocketTCPServerListener.h"
 
 
 class zThread;
 class zLogger;
 
-class SSHServer : public zRunnable, virtual public zObject {
+class SSHServer : public zSocketTCPServerListener, virtual public zObject {
 protected:
   zLogger* _logger;
-  zThread* _thread;
   zSocketTCPServer _serverSocket;
-  zVector _activeTransports;
+  zVector _transports;
 
 public:
   static SSHServer* createSSHServer(zSocketAddress const& bindAddress);
@@ -41,7 +41,7 @@ public:
   void start(void);
   void stop(void);
 
-  virtual int run(void* param);
+  virtual void onAccept(zSocketTCPConnection* connection);
 
 protected:
   SSHServer(void);

@@ -122,6 +122,7 @@ void zLogger::log(LogLevel level, char const* format, ...) {
 
 void zLogger::log(LogLevel level, char const* format, va_list args) {
   if (level < _level) return;
+  //
   char line[1024 * 4];
   line[0] = '\n';
 

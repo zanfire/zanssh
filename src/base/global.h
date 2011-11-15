@@ -19,18 +19,6 @@
 
 #include "config.h"
 
-//#define swap(type, i, j) {type t = i; i = j; j = t;}
-// Define a function to generate set a breakpoint programmatically.
-#if defined(_DEBUG)
-  #if defined(_WIN32)
-    #define Breakpoint() __debugbreak()
-  #else
-    #define Breakpoint() 
-  #endif
-#else
-  #define Breakpoint()
-#endif
-
 // NULL define
 #if !defined(NULL)
   #define NULL 0

@@ -18,6 +18,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 
 zStringBuffer::zStringBuffer(void) : zObject() {
@@ -80,6 +81,18 @@ void zStringBuffer::append(char c) {
   append(&c, 1);
 }
 
+void zStringBuffer::appendFormatted(char const* format, ...) {
+  char line[1024 * 4];
+  line[0] = '\n';
+
+  va_list args;
+  va_start(args, format);
+  vsnprintf(line, sizeof(line), format, args);
+  va_end(args);
+
+  append(line);
+}
+
 
 void zStringBuffer::append(int value) {
   char buffer[10];
@@ -95,7 +108,7 @@ void zStringBuffer::append(unsigned int value) {
 }
 
 
+
 zString zStringBuffer::toString() const {
   return zString(this);
 }
-

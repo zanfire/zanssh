@@ -395,23 +395,15 @@ uint32_t SSHMessageKeyInit::getReserved(void) const {
 
 zString SSHMessageKeyInit::toString(void) const {
   zStringBuffer strb;
-  //zVectorString v = getKexAlgorithms();
-  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-  //v = message.getServerHostKeyAlgorithms();
-  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-  //v = message.getEncryptionAlgorithmsClientToServer();
-  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-  //v = message.getEncryptionAlgorithmsServerToClient();
-  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-  //v = message.getMacAlgorithmsClientToServer();
-  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-  //v = message.getCompressionAlgorithmsClientToServer();
-  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-  //v = message.getCompressionAlgorithmsServerToClient();
-  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-  //v = message.getLanguagesClientToServer();
-  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
-  //v = message.getLanguagesServerToClient();
-  //for (int i = 0; i < v.getCount(); i++) _logger->debug("Key: %s.", v.getAtPtr(i)->getBuffer());
+  strb.appendFormatted("Kex algorithms: [ %s ]\n", getKexAlgorithms().toString(", ").getBuffer());
+  strb.appendFormatted("Server host key algorithms: [ %s ]\n", getServerHostKeyAlgorithms().toString(", ").getBuffer());
+  strb.appendFormatted("Encryption Algorithms Client To Server: [ %s ]\n", getEncryptionAlgorithmsClientToServer().toString(", ").getBuffer());
+  strb.appendFormatted("Encryption Algorithms Server To Client: [ %s ]\n", getEncryptionAlgorithmsServerToClient().toString(", ").getBuffer());
+  strb.appendFormatted("Mac Algorithms Client To Server: [ %s ]\n", getMacAlgorithmsClientToServer().toString(", ").getBuffer());
+  strb.appendFormatted("Compression Algorithms Client To Server: [ %s ]\n", getCompressionAlgorithmsClientToServer().toString(", ").getBuffer());
+  strb.appendFormatted("Compression Algorithms Server To Client: [ %s ]\n", getCompressionAlgorithmsServerToClient().toString(", ").getBuffer());
+  strb.appendFormatted("Languages Client To Server: [ %s ]\n", getLanguagesClientToServer().toString(", ").getBuffer());
+  strb.appendFormatted("Languages Server To Client: [ %s ]\n", getLanguagesServerToClient().toString(", ").getBuffer());
+
   return strb.toString();
 }

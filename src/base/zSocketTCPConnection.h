@@ -21,19 +21,16 @@
 #include "zObject.h"
 #include "zRunnable.h"
 #include "zMutex.h"
-#include "zSocketTCP.h"
 #include "zSocketTCPConnectionListener.h"
 
 
 class zSocketAddress;
 class zThread;
-class zSocketTCP;
+class zSocketTCPClient;
 
 class zSocketTCPConnection : public zRunnable, virtual public zObject {
 protected:
-  zSocketTCP* _socket;
-  zSocketAddress* _remoteAddr;
-  int _remotePort;
+  zSocketTCPClient* _socket;
   bool _mustStop;
   //
   zMutex _mtx;
@@ -41,7 +38,7 @@ protected:
   zSocketTCPConnectionListener* _listener;
 
 public:
-  zSocketTCPConnection(zSocketTCP* socket, zSocketAddress* remoteAddr);
+  zSocketTCPConnection(zSocketTCPClient* socket);
   virtual ~zSocketTCPConnection(void);
 
   void setListener(zSocketTCPConnectionListener* listener);

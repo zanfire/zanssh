@@ -57,6 +57,8 @@ public:
   //void append(long c);
   //void append(unsigned long c);
 
+  void appendFormatted(char const* format, ...);
+
   zString toString() const;
 
 private:
