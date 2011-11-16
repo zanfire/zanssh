@@ -19,6 +19,7 @@
 #include "zStringBuffer.h"
 #include "SSHMessage.h"
 #include "SSHMessageKeyInit.h"
+#include "zVectorString.h"
 
 #include <string.h>
 
@@ -146,8 +147,36 @@ void SSHTransport::sendHelloMessage(void) {
 
 void SSHTransport::sendMessageKeyInit(void) {
   unsigned char buffer[1024 * 64];
-  SSHMessageKeyInit key(buffer, sizeof(buffer));
-  key.initPacket();
+  SSHMessageKeyInit msg(buffer, sizeof(buffer));
+  msg.initPacket();
 
-  // BUilding this code.
+  zVectorString empty(false, 12);
+  zVectorString none(false, 12);
+  none.append(zString("none"));
+
+  zVectorString vec(false, 12);
+  vec.append(zString("diffie-hellman-group1-sha1"));
+  vec.append(zString("diffie-hellman-group14-sha1"));
+  msg.setKexAlgorithms(vec);
+
+  msg.setServerHostKeyAlgorithms(none);
+  msg.setEncryptionAlgorithmsClientToServer(none);
+  msg.setEncryptionAlgorithmsServerToClient(none);
+  msg.setMacAlgorithmsClientToServer(none);
+  msg.setMacAlgorithmsServerToClient(none);
+  msg.setCompressionAlgorithmsClientToServer(none);
+  msg.setCompressionAlgorithmsServerToClient(none);
+
+  msg.setLanguagesClientToServer(empty);
+  msg.setLanguagesServerToClient(empty);
+  msg.setFirstKexPacketFollows(false);
+  msg.setReserved(0);
+
+  _logger->debug("Prepared KEXINIT: %s", msg.toString().getBuffer());
+/*
+  int writeBytes = _connection->writeBytes(msg.getBuffer(), msg.getBufferContentSize());
+
+  if (writeBytes == msg.getBufferContentSize()) {
+    _state |= SSH_KEY_NEGO_STATE_KEY_INIT_SEND;
+  }*/
 }

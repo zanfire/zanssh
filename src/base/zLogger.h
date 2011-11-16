@@ -24,13 +24,14 @@
 
 #include <stdarg.h>
 #include <string.h>
+#include <errno.h>
 
 class zLoggerAppender;
 
 static zVector g_loggers;
 
 
-#define CHECK_FATAL(error, message) if (error != 0) { zLogger::getLogger("base")->fatal("Fatal error %d (%s), %s.", error, strerror(error), message); }
+#define CHECK_FATAL(error, message) if (error != 0) { zLogger::getLogger("base")->fatal("Fatal error %d (%s), %s.", error, strerror(errno), message); }
 #define ZLOGGER zLogger::getLogger("base")
 
 

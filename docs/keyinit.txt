@@ -1,0 +1,23 @@
+Received KEXINIT: Kex algorithms: 
+[ ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521, diffie-hellman-group-exchange-sha256, diffie-hellman-group-exchange-sha1, diffie-hellman-group14-sha1, diffie-hellman-group1-sha ]
+
+Server host key algorithms: [ ecdsa
+-sha2-nistp256-cert-v01@openssh.com, ecdsa-sha2-nistp384-cert-v01@openssh.com, ecdsa-sha2-nistp521-cert-v01@openssh.com, ssh-rsa-cert-v01@openssh.com, ssh-dss-cert-v01@openssh.com, ssh-rsa-cert-v00@openssh.com, ssh-dss-cert-v00@openssh.com, ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521, ssh-rsa, ssh-ds ]
+
+
+Encryption Algorithms Client To Server: [ aes128-ctr, aes192-ctr, aes256-ctr, arcfour256, arcfour128, aes128-cbc, 3des-cbc, blowfish-cbc, cast128-cbc, aes192-cbc, aes256-cbc, arcfour, rijndael-cbc@lysator.liu.s ]
+
+
+Encryption Algorithms Server To Client: [ aes128-ctr, aes192-ctr, aes256-ctr, arcfour256, arcfour128, aes128-cbc, 3des-cbc, blowfish-cbc, cast128-cbc, aes192-cbc, aes256-cbc, arcfour, rijndael-cbc@lysator.liu.s ]
+
+
+Mac Algorithms Client To Server: [ hmac-md5, hmac-sha1, umac-64@openssh.com, hmac-ripemd160, hmac-ripemd160@openssh.com, hmac-sha1-96, hmac-md5-9 ]
+
+Compression Algorithms Client To Server: [ none, zlib@openssh.com, zli ]
+Compression Algorithms Server To Client: [ none, zlib@openssh.com, zli ]
+
+Languages Client To Server: [ none, zlib@openssh.com, zli ]
+Languages Server To Client: [ none, zlib@openssh.com, zli ]
+first_kex_packet_follows: [ true ]
+Reserved: [ 0 ]
+

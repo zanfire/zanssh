@@ -56,27 +56,51 @@ class SSHPacket : zObject {
 protected:
   unsigned char* _buffer;
   int _bufferSize;
+  int _contentSize;
 
 public:
   SSHPacket(unsigned char* buffer, int bufferSize);
   virtual ~SSHPacket(void);
 
-  void initPacket();
+  // Initializes SSH packet with empty data.
+  void initPacket(void);
 
-  bool setPacketLength(int length);
-  bool setPaddingtLength(int length);
+  //
+  // Setters
+  //
+  bool setPacketLength(uint32_t length);
+  bool setPaddingLength(uint8_t length);
   bool setPayload(unsigned char* payload, int payloadSize);
-  bool setRandomPadding(unsigned char* randomPadding, int randomPaddingSize);
+  bool setPadding(unsigned char* randomPadding, int randomPaddingSize);
   bool setMAC(unsigned char* mac, int macSize);
 
+  //
+  // Getters
+  //
   uint32_t getPacketLength(void) const;
-  uint8_t getPaddingtLength(void) const;
   unsigned char* getPayload(int& payloadSize) const;
   int getPayloadSize() const;
-  unsigned char* getRandomPadding(int& randomPaddingSize) const;
+  unsigned char* getPadding(int& paddingSize) const;
+  uint8_t getPaddingLength(void) const;
   unsigned char* getMAC(int& macSize) const;
+  int getMACSize(void) const;
+
+  //
+  unsigned char* getBuffer(void) const { return _buffer; }
+  int getBufferSize(void) const { return _bufferSize; }
+  int getBufferContentSize(void) const { return _contentSize; }
 
   zString toString(void) const;
+
+protected:
+
+  // Shift payload from "from" to "to" indexes.
+  // Note from and to are related to the payload.
+  bool shiftPayload(int from, int to);
+
+  bool appendPayload(unsigned char* payload, int payloadSize);
+
+  virtual void impl_initPacket(void) {}
 };
 
 #endif // SSHPACKET_H_

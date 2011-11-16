@@ -9,6 +9,7 @@ libzanbase_a_SOURCES = \
 	zMutex.cpp \
 	zScopeMutex.cpp \
 	zEvent.cpp \
+	zRandom.cpp \
 	zString.cpp \
 	zStringTokenizer.cpp \
 	zStringBuffer.cpp \

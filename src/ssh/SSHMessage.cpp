@@ -30,6 +30,24 @@ SSHMessage::~SSHMessage(void) {
 }
 
 
+void SSHMessage::impl_initPacket(void) {
+  SSHPacket::impl_initPacket();
+  char tmp[] = { 0x00 };
+  appendPayload((unsigned char*)&tmp, 1);
+}
+
+
+bool SSHMessage::setMessageType(SSHMessage::SSHMessageType type) {
+  int payloadSize = 0;
+  unsigned char* payload = getPayload(payloadSize);
+  if (payload == NULL) return false;
+  if (payloadSize == 0) return false;
+
+  payload[0] = type;
+  return true;
+}
+
+
 SSHMessage::SSHMessageType SSHMessage::getMessageType(void) const {
   int payloadSize = 0;
   unsigned char* payload = getPayload(payloadSize);

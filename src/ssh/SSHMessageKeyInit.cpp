@@ -19,6 +19,8 @@
 #include "zStringBuffer.h"
 #include "zStringTokenizer.h"
 
+#include "zRandom.h"
+
 #include <arpa/inet.h>
 
 SSHMessageKeyInit::SSHMessageKeyInit(unsigned char* buffer, int bufferSize) : SSHMessage(buffer, bufferSize) {
@@ -26,6 +28,48 @@ SSHMessageKeyInit::SSHMessageKeyInit(unsigned char* buffer, int bufferSize) : SS
 
 
 SSHMessageKeyInit::~SSHMessageKeyInit(void) {
+}
+
+
+void SSHMessageKeyInit::impl_initPacket(void) {
+  SSHMessage::impl_initPacket();
+  setMessageType(SSHMessage::SSH_MSG_KEXINIT);
+
+
+  uint8_t cookie[SSH_MSG_KEXINIT_COOKIE_SIZE];
+  zRandom* rand = zRandom::getSingleton();
+  for (int i = 0; i < SSH_MSG_KEXINIT_COOKIE_SIZE; i++) {
+    cookie[i] = rand->nextInt();
+  }
+  appendPayload((unsigned char*)(&cookie), SSH_MSG_KEXINIT_COOKIE_SIZE);
+
+  char tmp[] = { 0x00, 0x00, 0x00, 0x00};
+  appendPayload((unsigned char*)(&tmp), 4);
+  // name-list kex_algorithms
+  appendPayload((unsigned char*)(&tmp), 4);
+  // name-list server_host_key_algorithms
+  appendPayload((unsigned char*)(&tmp), 4);
+  // name-list encryption_algorithms_client_to_server
+  appendPayload((unsigned char*)(&tmp), 4);
+  // name-list encryption_algorithms_server_to_client
+  appendPayload((unsigned char*)(&tmp), 4);
+  // name-list mac_algorithms_client_to_server
+  appendPayload((unsigned char*)(&tmp), 4);
+  // name-list mac_algorithms_server_to_client
+  appendPayload((unsigned char*)(&tmp), 4);
+  // name-list compression_algorithms_client_to_server
+  appendPayload((unsigned char*)(&tmp), 4);
+  // name-list compression_algorithms_server_to_client
+  appendPayload((unsigned char*)(&tmp), 4);
+  // name-list languages_client_to_server
+  appendPayload((unsigned char*)(&tmp), 4);
+  // name-list languages_server_to_client
+  appendPayload((unsigned char*)(&tmp), 4);
+  // boolean first_kex_packet_follows
+  appendPayload((unsigned char*)(&tmp), 1);
+  // uint32 0 (reserved for future extension)
+  appendPayload((unsigned char*)(&tmp), 4);
+
 }
 
 
@@ -225,6 +269,7 @@ zVectorString SSHMessageKeyInit::getMacAlgorithmsServerToClient(void) const {
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
+
   SSHMessage::skipNameList(&message, messageSize);
 
   if (message != NULL && messageSize > 4) {
@@ -250,6 +295,7 @@ zVectorString SSHMessageKeyInit::getCompressionAlgorithmsClientToServer(void) co
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
+
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
 
@@ -277,6 +323,8 @@ zVectorString SSHMessageKeyInit::getCompressionAlgorithmsServerToClient(void) co
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
+
+  SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
 
@@ -301,6 +349,9 @@ zVectorString SSHMessageKeyInit::getLanguagesClientToServer(void) const {
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
@@ -330,7 +381,12 @@ zVectorString SSHMessageKeyInit::getLanguagesServerToClient(void) const {
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
+
   SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+
   SSHMessage::skipNameList(&message, messageSize);
 
 
@@ -356,7 +412,12 @@ bool SSHMessageKeyInit::getFirstKexPacketFollows(void) const {
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
+
   SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
 
@@ -382,7 +443,10 @@ uint32_t SSHMessageKeyInit::getReserved(void) const {
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
   SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipNameList(&message, messageSize);
+
   SSHMessage::skipBytes(1, &message, messageSize);
+
 
   if (message != NULL && messageSize == 4) {
     return ntohl(((uint32_t*)message)[0]);
@@ -395,15 +459,18 @@ uint32_t SSHMessageKeyInit::getReserved(void) const {
 
 zString SSHMessageKeyInit::toString(void) const {
   zStringBuffer strb;
+  strb.append(SSHPacket::toString());
   strb.appendFormatted("Kex algorithms: [ %s ]\n", getKexAlgorithms().toString(", ").getBuffer());
   strb.appendFormatted("Server host key algorithms: [ %s ]\n", getServerHostKeyAlgorithms().toString(", ").getBuffer());
   strb.appendFormatted("Encryption Algorithms Client To Server: [ %s ]\n", getEncryptionAlgorithmsClientToServer().toString(", ").getBuffer());
   strb.appendFormatted("Encryption Algorithms Server To Client: [ %s ]\n", getEncryptionAlgorithmsServerToClient().toString(", ").getBuffer());
   strb.appendFormatted("Mac Algorithms Client To Server: [ %s ]\n", getMacAlgorithmsClientToServer().toString(", ").getBuffer());
+  strb.appendFormatted("Mac Algorithms Server To Client: [ %s ]\n", getMacAlgorithmsServerToClient().toString(", ").getBuffer());
   strb.appendFormatted("Compression Algorithms Client To Server: [ %s ]\n", getCompressionAlgorithmsClientToServer().toString(", ").getBuffer());
   strb.appendFormatted("Compression Algorithms Server To Client: [ %s ]\n", getCompressionAlgorithmsServerToClient().toString(", ").getBuffer());
   strb.appendFormatted("Languages Client To Server: [ %s ]\n", getLanguagesClientToServer().toString(", ").getBuffer());
   strb.appendFormatted("Languages Server To Client: [ %s ]\n", getLanguagesServerToClient().toString(", ").getBuffer());
-
+  strb.appendFormatted("first_kex_packet_follows: [ %s ]\n", getFirstKexPacketFollows() ? "true" : "false");
+  strb.appendFormatted("Reserved: [ %d ]\n", getReserved());
   return strb.toString();
 }

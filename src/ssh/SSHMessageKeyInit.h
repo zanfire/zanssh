@@ -28,16 +28,16 @@
 /*
  *  byte SSH_MSG_KEXINIT
  *  byte[16] cookie (random bytes)
- *  name-list kex_algorithms
- *  name-list server_host_key_algorithms
- *  name-list encryption_algorithms_client_to_server
- *  name-list encryption_algorithms_server_to_client
- *  name-list mac_algorithms_client_to_server
- *  name-list mac_algorithms_server_to_client
- *  name-list compression_algorithms_client_to_server
- *  name-list compression_algorithms_server_to_client
- *  name-list languages_client_to_server
- *  name-list languages_server_to_client
+ *  1 name-list kex_algorithms
+ *  2 name-list server_host_key_algorithms
+ *  3 name-list encryption_algorithms_client_to_server
+ *  4 name-list encryption_algorithms_server_to_client
+ *  5 name-list mac_algorithms_client_to_server
+ *  6 name-list mac_algorithms_server_to_client
+ *  7 name-list compression_algorithms_client_to_server
+ *  8 name-list compression_algorithms_server_to_client
+ *  9 name-list languages_client_to_server
+ *  10 name-list languages_server_to_client
  *  boolean first_kex_packet_follows
  *  uint32 0 (reserved for future extension)
  */
@@ -51,6 +51,7 @@ public:
   // Setter
   //
 
+  bool generateRandomCookie(void);
   // name-list kex_algorithms
   bool setKexAlgorithms(zVectorString const& v);
   // name-list server_host_key_algorithms
@@ -106,6 +107,9 @@ public:
   uint32_t getReserved(void) const;
 
   zString toString(void) const;
+
+protected:
+  virtual void impl_initPacket(void);
 };
 
 #endif // SSHMESSAGEKEYINIT_H__
