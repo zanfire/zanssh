@@ -36,8 +36,8 @@ bool zStringTokenizer::hasMoreTokens(void) const {
 zString zStringTokenizer::nextToken(void) {
   int start = currentPos_;
   currentPos_ = tokenized_.indexOf(tokenizer_, currentPos_);
-  currentPos_ = currentPos_ == -1 ? tokenized_.getLength() - 1 : currentPos_;
-  if (skipEmptyToken_ && start == currentPos_) {
+  currentPos_ = (currentPos_ == -1) ? tokenized_.getLength() : currentPos_;
+  if (start == currentPos_ && skipEmptyToken_) {
     return nextToken();
   }
   else {

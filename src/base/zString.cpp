@@ -164,8 +164,8 @@ void zString::copyFrom(const zString& str) {
 
 
 zString zString::substrig(int startPos, int endPos) const {
-  if (startPos < 0 || startPos >= getLength()) return zString();
-  if (endPos < 0 || endPos >= getLength()) return zString();
+  if (startPos < 0 || startPos > getLength()) return zString();
+  if (endPos < 0 || endPos > getLength()) return zString();
   if (startPos == endPos) return zString();
 
   if (startPos > endPos) {
@@ -207,7 +207,7 @@ int zString::lastIndexOf(zString& str, int endPos) const {
 zString zString::fromPascalString(unsigned char const* pascalString, int bufferSize, bool isInNetworkByteOrder) {
   if (bufferSize < 4) return zString();
   uint32_t length = ((uint32_t*)pascalString)[0];
-  length = ntohl(length);
+  length = isInNetworkByteOrder ? ntohl(length) : length;
   if (bufferSize < (int)(length + 4)) return zString();
   return zString((char*)(pascalString + 4), length);
 }

@@ -97,8 +97,8 @@ protected:
   // Shift payload from "from" to "to" indexes.
   // Note from and to are related to the payload.
   bool shiftPayload(int from, int to);
-
   bool appendPayload(unsigned char* payload, int payloadSize);
+  bool replaceNameList(unsigned char* oldNameList, zString const& newNameList);
 
   virtual void impl_initPacket(void) {}
 };

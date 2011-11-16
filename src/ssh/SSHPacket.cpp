@@ -144,6 +144,29 @@ bool SSHPacket::appendPayload(unsigned char* payload, int payloadSize) {
 }
 
 
+bool SSHPacket::replaceNameList(unsigned char* oldNameList, zString const& newNameList) {
+  if (oldNameList == NULL) return false;
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  if (payload == NULL || payload > oldNameList) return false;
+  int oldNameListIndex = oldNameList - payload;
+  if (oldNameListIndex > payloadSize) return false;
+
+  uint32_t length = ntohl(((uint32_t*)oldNameList)[0]);
+  if (length < (uint32_t)newNameList.getLength()) {
+    if ((_contentSize - length  +newNameList.getLength()) > _bufferSize) return false;
+  }
+  if (length != (uint32_t)newNameList.getLength()) {
+    // shit operation take care of sizes.
+    shiftPayload(oldNameListIndex + 4, oldNameListIndex + 4 + newNameList.getLength());
+    ((uint32_t*)oldNameList)[0] = htonl(newNameList.getLength());
+    oldNameList += 4;
+    memcpy(oldNameList, newNameList.getBuffer(), newNameList.getLength());
+  }
+  return true;
+}
+
+
 bool SSHPacket::setPacketLength(uint32_t length) {
   if (_bufferSize < 4) return false;
   ((uint32_t*)_buffer)[0] = htonl(length);

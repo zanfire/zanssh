@@ -74,64 +74,177 @@ void SSHMessageKeyInit::impl_initPacket(void) {
 
 
 bool SSHMessageKeyInit::setKexAlgorithms(zVectorString const& v) {
-  zString kex = v.toString(zString(","));
-
-  setPacketLength(getPacketLength() + kex.getLength() + 4);
-
-  int messageSize = -1;
-  unsigned char* message = getMessage(messageSize);
-  if (message == NULL || messageSize <= SSH_MSG_KEXINIT_COOKIE_SIZE) {
-    return false;
-  }
-  // Skip cookies.
-  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-
-  return false;
+  zString nameList = v.toString(zString(","));
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  // Read current named list.
+  return replaceNameList(payload, nameList);
 }
 
 
 bool SSHMessageKeyInit::setServerHostKeyAlgorithms(zVectorString const& v) {
-  return false;
+  zString nameList = v.toString(zString(","));
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  // Read current named list.
+  return replaceNameList(payload, nameList);
 }
 
 
 bool SSHMessageKeyInit::setEncryptionAlgorithmsClientToServer(zVectorString const& v) {
-  return false;
+  zString nameList = v.toString(zString(","));
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+
+  return replaceNameList(payload, nameList);
 }
 
 
 bool SSHMessageKeyInit::setEncryptionAlgorithmsServerToClient(zVectorString const& v) {
-  return false;
+  zString nameList = v.toString(zString(","));
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+
+  return replaceNameList(payload, nameList);
 }
 
 
 bool SSHMessageKeyInit::setMacAlgorithmsClientToServer(zVectorString const& v) {
-  return false;
+  zString nameList = v.toString(zString(","));
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+
+  return replaceNameList(payload, nameList);
 }
 
 
 bool SSHMessageKeyInit::setMacAlgorithmsServerToClient(zVectorString const& v) {
-  return false;
+  zString nameList = v.toString(zString(","));
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+
+  return replaceNameList(payload, nameList);
 }
 
 
 bool SSHMessageKeyInit::setCompressionAlgorithmsClientToServer(zVectorString const& v) {
-  return false;
+  zString nameList = v.toString(zString(","));
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+
+  return replaceNameList(payload, nameList);
 }
 
 
 bool SSHMessageKeyInit::setCompressionAlgorithmsServerToClient(zVectorString const& v) {
-  return false;
+  zString nameList = v.toString(zString(","));
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+
+  return replaceNameList(payload, nameList);
 }
 
 
 bool SSHMessageKeyInit::setLanguagesClientToServer(zVectorString const& v) {
-  return false;
+  zString nameList = v.toString(zString(","));
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+
+  return replaceNameList(payload, nameList);
 }
 
 
 bool SSHMessageKeyInit::setLanguagesServerToClient(zVectorString const& v) {
-  return false;
+  zString nameList = v.toString(zString(","));
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipNameList(&payload, payloadSize);
+
+  return replaceNameList(payload, nameList);
 }
 
 
@@ -156,7 +269,7 @@ zVectorString SSHMessageKeyInit::getKexAlgorithms(void) const {
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
 
   if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize);
+      zString str = zString::fromPascalString(message, messageSize, true);
       return zStringTokenizer::split(str, ",");
   }
   else {
