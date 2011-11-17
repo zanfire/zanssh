@@ -28,6 +28,8 @@ public:
   zSocketTCP(void);
   virtual ~zSocketTCP(void);
 
+  bool enableReuseAddress(bool enable);
+
 protected:
   virtual SocketError impl_bind(void);
   virtual SocketError impl_create(void);

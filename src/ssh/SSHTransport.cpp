@@ -102,6 +102,8 @@ void SSHTransport::onIncomingData(unsigned char* buffer, int bufferSize) {
 
 
 void SSHTransport::onDisconected(void) {
+  _mustStop = true;
+  _event.signal();
   _thread->stop();
 }
 

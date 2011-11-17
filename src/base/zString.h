@@ -54,7 +54,7 @@ public:
   zString(const zString& obj);
   zString& operator=(const zString& rhs);
 
-  zString substrig(int startPos, int endPos) const;
+  zString substrig(int startPos, int length) const;
   int indexOf(zString& str, int startPos) const;
   int lastIndexOf(zString& str, int endPos) const;
 

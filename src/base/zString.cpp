@@ -163,17 +163,10 @@ void zString::copyFrom(const zString& str) {
 }
 
 
-zString zString::substrig(int startPos, int endPos) const {
+zString zString::substrig(int startPos, int length) const {
   if (startPos < 0 || startPos > getLength()) return zString();
-  if (endPos < 0 || endPos > getLength()) return zString();
-  if (startPos == endPos) return zString();
-
-  if (startPos > endPos) {
-    // Swap startPos with endPos.
-    int tmp = startPos; startPos = endPos; endPos = tmp;
-  }
-
-  return zString(getBuffer() + startPos, endPos - startPos);
+  if (length < 0 || (startPos + length) > getLength()) return zString();
+  return zString(getBuffer() + startPos, length);
 }
 
 

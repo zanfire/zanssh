@@ -38,8 +38,7 @@ int handlePort(char* programName, char const* value);
 
 int main(int argc, char** argv) {
   g_logger = zLogger::getLogger("main");
-  int opt;
-
+  int opt = -1;
   int localPort = -1;
   zString addressStr;
   zSocketAddress* localAddress = NULL;

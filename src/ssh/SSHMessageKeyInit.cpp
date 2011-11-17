@@ -160,6 +160,7 @@ bool SSHMessageKeyInit::setMacAlgorithmsServerToClient(zVectorString const& v) {
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
+
   SSHMessage::skipNameList(&payload, payloadSize);
 
   return replaceNameList(payload, nameList);
@@ -178,6 +179,7 @@ bool SSHMessageKeyInit::setCompressionAlgorithmsClientToServer(zVectorString con
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
+
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
 
@@ -197,6 +199,7 @@ bool SSHMessageKeyInit::setCompressionAlgorithmsServerToClient(zVectorString con
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
+
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
@@ -217,6 +220,7 @@ bool SSHMessageKeyInit::setLanguagesClientToServer(zVectorString const& v) {
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
+
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
@@ -238,10 +242,12 @@ bool SSHMessageKeyInit::setLanguagesServerToClient(zVectorString const& v) {
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
+
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
   SSHMessage::skipNameList(&payload, payloadSize);
+
   SSHMessage::skipNameList(&payload, payloadSize);
 
   return replaceNameList(payload, nameList);

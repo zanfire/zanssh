@@ -30,7 +30,6 @@ zSocketBase::SocketError zSocketBase::bindTo(zSocketAddress const& address) {
   if (_desc != INVALID_DESCRIPTOR) {
     // Destroy socket descriptor and close socket.
   }
-
   _bindAddress = address.clone();
   SocketError res = impl_create();
   if (res != SOCKET_OK) return res;

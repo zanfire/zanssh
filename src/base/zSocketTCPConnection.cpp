@@ -52,11 +52,17 @@ void zSocketTCPConnection::setListener(zSocketTCPConnectionListener* listener) {
 
 int zSocketTCPConnection::writeBytes(unsigned char* buffer, int bufferSize) {
   int res = send(_socket->getDescriptor(), buffer, bufferSize, 0);
-    if (res == -1) {
-      if (EADDRINUSE)
+
+  if (res == -1) {
+    if (errno == EADDRINUSE) {
       zLogger::getLogger("base")->info("Failed errno %d.", errno);
     }
-    return res;
+    else if (errno == EPIPE){
+      _socket->close();
+      if (_listener != NULL) _listener->onDisconected();
+    }
+  }
+  return res;
 }
 
 
@@ -74,7 +80,7 @@ int zSocketTCPConnection::run(void* param) {
       zScopeMutex scope(_mtx);
       if (_listener != NULL) _listener->onIncomingData(buffer, readBytes);
     }
-    else {
+    else if (readBytes < 0) {
       // Handle error.
       zLogger::getLogger("base")->info("Failed errno %d.", errno);
 
@@ -87,6 +93,13 @@ int zSocketTCPConnection::run(void* param) {
       //ENOMEM Could not allocate memory for recvmsg().
       //ENOTCONN
       //ENOTSOCK
+    }
+    else if (readBytes == 0) {
+      // Socket closed.
+      _socket->close();
+      zScopeMutex scope(_mtx);
+      if (_listener != NULL) _listener->onDisconected();
+      break;
     }
   }
   return 0;

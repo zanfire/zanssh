@@ -73,6 +73,7 @@ zSocketBase::SocketError zSocketTCP::impl_create(void) {
   }
 
   _desc = socket(domain, SOCK_STREAM, 0);
+  enableReuseAddress(true);
   return SOCKET_OK;
 }
 
@@ -83,4 +84,14 @@ zSocketBase::SocketError zSocketTCP::impl_close(void) {
     // TODO: Handle errors.
   }
   return SOCKET_OK;
+}
+
+
+bool zSocketTCP::enableReuseAddress(bool enable) {
+  if (_desc == INVALID_DESCRIPTOR) return false;
+
+  int on = enable ? 1 : 0;
+  int ret = setsockopt(_desc, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on) );
+
+  return (ret == 0);
 }
