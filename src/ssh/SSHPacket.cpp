@@ -75,6 +75,7 @@
 #include "SSHPacket.h"
 
 #include "zStringBuffer.h"
+#include "zRandom.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -93,11 +94,33 @@ SSHPacket::~SSHPacket(void) {
 }
 
 
-void SSHPacket::initPacket() {
+void SSHPacket::initPacket(void) {
   memset(_buffer, 0x00, _bufferSize);
   _contentSize = 5; // Packet length
   setPacketLength(1); // Padding is included.
   impl_initPacket();
+}
+
+
+void SSHPacket::finalize(void) {
+  /*      Arbitrary-length padding, such that the total length of
+  *      (packet_length || padding_length || payload || random padding)
+  *      is a multiple of the cipher block size or 8, whichever is
+  *      larger. There MUST be at least four bytes of padding.
+  */
+  unsigned char padding[255];
+  zRandom* rand = zRandom::getSingleton();
+  for (int i = 0; i < 255; i++) {
+    padding[i] = rand->nextInt();
+  }
+
+  int paddingSize = 4;
+  int total = 4 + 1 + getPayloadSize() + paddingSize;
+  if (total % 8 != 0) {
+    paddingSize += 8 - (total % 8);
+  }
+
+  setPadding((unsigned char*)(&padding), paddingSize);
 }
 
 
@@ -219,6 +242,8 @@ bool SSHPacket::setPadding(unsigned char* padding, int paddingSize) {
   }
 
   memcpy(buf, padding, paddingSize);
+  setPaddingLength(paddingSize);
+  setPacketLength(getPacketLength() - currentPaddingSize + paddingSize);
   _contentSize = _contentSize - currentPaddingSize + paddingSize;
   return true;
 }
@@ -302,9 +327,12 @@ zString SSHPacket::toString(void) const {
   zStringBuffer strb;
   strb.append("Packet length: ");
   strb.append(getPacketLength());
-  strb.append(" Padding length: ");
+  strb.append("\nPadding length: ");
   strb.append(getPaddingLength());
-  strb.append(" Payload length: ");
+  strb.append("\nPayload length: ");
   strb.append(getPayloadSize());
+  strb.append("\nContent length: ");
+  strb.append(getBufferContentSize());
+  strb.append("\n");
   return strb.toString();
 }

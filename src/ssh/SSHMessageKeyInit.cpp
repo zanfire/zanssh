@@ -94,7 +94,7 @@ bool SSHMessageKeyInit::setServerHostKeyAlgorithms(zVectorString const& v) {
   SSHMessage::skipBytes(1, &payload, payloadSize);
   // cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
   // Read current named list.
   return replaceNameList(payload, nameList);
 }
@@ -108,8 +108,8 @@ bool SSHMessageKeyInit::setEncryptionAlgorithmsClientToServer(zVectorString cons
   SSHMessage::skipBytes(1, &payload, payloadSize);
   // cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
   return replaceNameList(payload, nameList);
 }
@@ -123,9 +123,9 @@ bool SSHMessageKeyInit::setEncryptionAlgorithmsServerToClient(zVectorString cons
   SSHMessage::skipBytes(1, &payload, payloadSize);
   // cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
   return replaceNameList(payload, nameList);
 }
@@ -139,10 +139,10 @@ bool SSHMessageKeyInit::setMacAlgorithmsClientToServer(zVectorString const& v) {
   SSHMessage::skipBytes(1, &payload, payloadSize);
   // cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
   return replaceNameList(payload, nameList);
 }
@@ -156,12 +156,12 @@ bool SSHMessageKeyInit::setMacAlgorithmsServerToClient(zVectorString const& v) {
   SSHMessage::skipBytes(1, &payload, payloadSize);
   // cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
   return replaceNameList(payload, nameList);
 }
@@ -175,13 +175,13 @@ bool SSHMessageKeyInit::setCompressionAlgorithmsClientToServer(zVectorString con
   SSHMessage::skipBytes(1, &payload, payloadSize);
   // cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
   return replaceNameList(payload, nameList);
 }
@@ -195,14 +195,14 @@ bool SSHMessageKeyInit::setCompressionAlgorithmsServerToClient(zVectorString con
   SSHMessage::skipBytes(1, &payload, payloadSize);
   // cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
   return replaceNameList(payload, nameList);
 }
@@ -216,15 +216,15 @@ bool SSHMessageKeyInit::setLanguagesClientToServer(zVectorString const& v) {
   SSHMessage::skipBytes(1, &payload, payloadSize);
   // cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
   return replaceNameList(payload, nameList);
 }
@@ -238,29 +238,73 @@ bool SSHMessageKeyInit::setLanguagesServerToClient(zVectorString const& v) {
   SSHMessage::skipBytes(1, &payload, payloadSize);
   // cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
-  SSHMessage::skipNameList(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
 
   return replaceNameList(payload, nameList);
 }
 
 
 bool SSHMessageKeyInit::setFirstKexPacketFollows(bool v) {
-  return false;
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  if (payload == NULL) return false;
+  payload[0] = v ? 1 : 0;
+
+  return true;
 }
 
 
 bool SSHMessageKeyInit::setReserved(uint32_t v) {
-  return false;
+  int payloadSize = -1;
+  unsigned char* payload = getPayload(payloadSize);
+  // types
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+  // cookies.
+  SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipString(&payload, payloadSize);
+  SSHMessage::skipBytes(1, &payload, payloadSize);
+
+  if (payload == NULL || payloadSize < 4) return false;
+  ((uint32_t*)payload)[0] = htonl(v);
+
+  return true;
 }
 
 
@@ -293,7 +337,7 @@ zVectorString SSHMessageKeyInit::getServerHostKeyAlgorithms(void) const {
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
   if (message != NULL && messageSize > 4) {
     zString str = zString::fromPascalString(message, messageSize, true);
@@ -314,8 +358,8 @@ zVectorString SSHMessageKeyInit::getEncryptionAlgorithmsClientToServer(void) con
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
 
   if (message != NULL && messageSize > 4) {
@@ -337,12 +381,12 @@ zVectorString SSHMessageKeyInit::getEncryptionAlgorithmsServerToClient(void) con
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
   if (message != NULL && messageSize > 4) {
-    zString str = zString::fromPascalString(message, messageSize);
+    zString str = zString::fromPascalString(message, messageSize, true);
     return zStringTokenizer::split(str, ",");
   }
   else {
@@ -360,10 +404,10 @@ zVectorString SSHMessageKeyInit::getMacAlgorithmsClientToServer(void) const {
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
   if (message != NULL && messageSize > 4) {
     zString str = zString::fromPascalString(message, messageSize, true);
@@ -384,12 +428,12 @@ zVectorString SSHMessageKeyInit::getMacAlgorithmsServerToClient(void) const {
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
   if (message != NULL && messageSize > 4) {
     zString str = zString::fromPascalString(message, messageSize, true);
@@ -410,17 +454,17 @@ zVectorString SSHMessageKeyInit::getCompressionAlgorithmsClientToServer(void) co
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
 
   if (message != NULL && messageSize > 4) {
-    zString str = zString::fromPascalString(message, messageSize, true);;
+    zString str = zString::fromPascalString(message, messageSize, true);
     return zStringTokenizer::split(str, ",");
   }
   else {
@@ -438,17 +482,17 @@ zVectorString SSHMessageKeyInit::getCompressionAlgorithmsServerToClient(void) co
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
-  if (message != NULL && messageSize > 4) {
-      zString str = zString::fromPascalString(message, messageSize - 17);
+  if (message != NULL && messageSize >= 4) {
+      zString str = zString::fromPascalString(message, messageSize, true);
       return zStringTokenizer::split(str, ",");
   }
   else {
@@ -466,18 +510,18 @@ zVectorString SSHMessageKeyInit::getLanguagesClientToServer(void) const {
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
 
-  if (message != NULL && messageSize > 4) {
+  if (message != NULL && messageSize >= 4) {
     zString str = zString::fromPascalString(message, messageSize, true);
     return zStringTokenizer::split(str, ",");
   }
@@ -496,20 +540,20 @@ zVectorString SSHMessageKeyInit::getLanguagesServerToClient(void) const {
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
 
-  if (message != NULL && messageSize > 4) {
+  if (message != NULL && messageSize >= 4) {
     zString str = zString::fromPascalString(message, messageSize, true);
     return zStringTokenizer::split(str, ",");
   }
@@ -527,21 +571,21 @@ bool SSHMessageKeyInit::getFirstKexPacketFollows(void) const {
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
   if (message != NULL && messageSize >= 1) {
-    return (message[0] == 0);
+    return !(message[0] == 0);
   }
   return false;
 }
@@ -555,23 +599,26 @@ uint32_t SSHMessageKeyInit::getReserved(void) const {
   }
   // Skip cookies.
   SSHMessage::skipBytes(SSH_MSG_KEXINIT_COOKIE_SIZE, &message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
-  SSHMessage::skipNameList(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
+
+  SSHMessage::skipString(&message, messageSize);
+  SSHMessage::skipString(&message, messageSize);
 
   SSHMessage::skipBytes(1, &message, messageSize);
+
 
 
   if (message != NULL && messageSize == 4) {
     return ntohl(((uint32_t*)message)[0]);
   }
-  return 0;
-
   return 0;
 }
 

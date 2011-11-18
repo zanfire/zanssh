@@ -64,6 +64,7 @@ public:
 
   // Initializes SSH packet with empty data.
   void initPacket(void);
+  void finalize(void);
 
   //
   // Setters

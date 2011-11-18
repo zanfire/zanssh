@@ -73,7 +73,7 @@ protected:
   static int skipBytes(int bytes, unsigned char** message, int& messageSize);
   // Skip a name list.
   // @return number of bytes skipped
-  static int skipNameList(unsigned char** message, int& messageSize);
+  static int skipString(unsigned char** message, int& messageSize);
 };
 
 #endif // SSHMESSAGE_H__

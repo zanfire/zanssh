@@ -75,6 +75,7 @@ unsigned char* SSHMessage::getMessage(int& messageSize) const {
 
 zString SSHMessage::toString(void) {
   zStringBuffer strb;
+  strb.append(SSHPacket::toString());
   return strb.toString();
 }
 
@@ -94,7 +95,7 @@ int SSHMessage::skipBytes(int bytes, unsigned char** message, int& messageSize) 
 }
 
 
-int SSHMessage::skipNameList(unsigned char** message, int& messageSize) {
+int SSHMessage::skipString(unsigned char** message, int& messageSize) {
   if (message == NULL) return 0; // Nothing to do.
   if (*message == NULL) return 0; // Nothing to do.
   if (messageSize < 4) return 0; // Nothing to do.

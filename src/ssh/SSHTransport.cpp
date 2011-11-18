@@ -17,9 +17,12 @@
 #include "SSHTransport.h"
 
 #include "zStringBuffer.h"
+#include "zVectorString.h"
+
 #include "SSHMessage.h"
 #include "SSHMessageKeyInit.h"
-#include "zVectorString.h"
+#include "SSHMessageDisconnect.h"
+
 
 #include <string.h>
 
@@ -46,22 +49,6 @@ SSHTransport::~SSHTransport() {
   _thread->stop();
   delete _thread;
 }
-
-/*
-void SSHTransport::initialize(void) {
-  if (_initialized) {
-    _logger->error("Initialization skipped, SSHTRansport is just initialized.");
-    return;
-  }
-
-  _state = SSH_TRANSPORT_STATE_UNKNOWN;
-
-  _readThread->start(NULL);
-  sendHelloMessage();
-
-  _logger->debug("SSHTransport is initialized correctly.");
-}
-*/
 
 
 void SSHTransport::onIncomingData(unsigned char* buffer, int bufferSize) {
@@ -94,7 +81,14 @@ void SSHTransport::onIncomingData(unsigned char* buffer, int bufferSize) {
 
       _logger->debug("Received KEXINIT: %s", kexinit.toString().getBuffer());
     }
-    //else if (message.getMessageType() == SSHMessage:SSH_MS) {
+    else if (message.getMessageType() == SSHMessage::SSH_MSG_DISCONNECT) {
+      SSHMessageDisconnect d(buffer, bufferSize);
+      _logger->debug("Received disconnect message (%s)", d.toString().getBuffer());
+      onDisconected();
+    }
+    else {
+      _logger->debug("Received message type: %d %s", message.getMessageType(), message.toString().getBuffer());
+    }
   }
 
   _event.signal();
@@ -156,16 +150,28 @@ void SSHTransport::sendMessageKeyInit(void) {
   zVectorString none(false, 12);
   none.append(zString("none"));
 
-  zVectorString vec(false, 12);
-  vec.append(zString("diffie-hellman-group1-sha1"));
-  vec.append(zString("diffie-hellman-group14-sha1"));
-  msg.setKexAlgorithms(vec);
+  zVectorString kex(false, 12);
+  kex.append(zString("diffie-hellman-group1-sha1"));
+  kex.append(zString("diffie-hellman-group14-sha1"));
+  msg.setKexAlgorithms(kex);
 
-  msg.setServerHostKeyAlgorithms(none);
-  msg.setEncryptionAlgorithmsClientToServer(none);
-  msg.setEncryptionAlgorithmsServerToClient(none);
-  msg.setMacAlgorithmsClientToServer(none);
-  msg.setMacAlgorithmsServerToClient(none);
+  zVectorString hostkey(false, 12);
+  hostkey.append(zString("ssh-dss"));
+  hostkey.append(zString("ssh-rsa"));
+  msg.setServerHostKeyAlgorithms(hostkey);
+
+  zVectorString enc(false, 12);
+  enc.append(zString("3des-cbc"));
+  enc.append(zString("aes128-cbc"));
+  msg.setEncryptionAlgorithmsClientToServer(enc);
+  msg.setEncryptionAlgorithmsServerToClient(enc);
+
+  zVectorString mac(false, 12);
+  mac.append(zString("hmac-sha1"));
+  mac.append(zString("hmac-sha1-96"));
+  msg.setMacAlgorithmsClientToServer(mac);
+  msg.setMacAlgorithmsServerToClient(mac);
+
   msg.setCompressionAlgorithmsClientToServer(none);
   msg.setCompressionAlgorithmsServerToClient(none);
 
@@ -174,11 +180,12 @@ void SSHTransport::sendMessageKeyInit(void) {
   msg.setFirstKexPacketFollows(false);
   msg.setReserved(0);
 
+  msg.finalize();
+
   _logger->debug("Prepared KEXINIT: %s", msg.toString().getBuffer());
-/*
   int writeBytes = _connection->writeBytes(msg.getBuffer(), msg.getBufferContentSize());
 
   if (writeBytes == msg.getBufferContentSize()) {
     _state |= SSH_KEY_NEGO_STATE_KEY_INIT_SEND;
-  }*/
+  }
 }
