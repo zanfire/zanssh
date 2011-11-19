@@ -59,6 +59,6 @@ void SSHServer::stop(void) {
 
 
 void SSHServer::onAccept(zSocketTCPConnection* connection) {
-  SSHTransport* transport = new SSHTransport(connection);
+  SSHTransport* transport = new SSHTransport(connection, true);
   _transports.append(transport);
 }

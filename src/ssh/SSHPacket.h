@@ -91,7 +91,9 @@ public:
   int getBufferSize(void) const { return _bufferSize; }
   int getBufferContentSize(void) const { return _contentSize; }
 
-  zString toString(void) const;
+  bool isValid(void);
+
+  virtual zString toString(void) const;
 
 protected:
 

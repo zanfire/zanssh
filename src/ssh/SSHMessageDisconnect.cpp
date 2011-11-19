@@ -117,8 +117,8 @@ zString SSHMessageDisconnect::getLanguageTag(void) const {
 
 zString SSHMessageDisconnect::toString(void) const {
   zStringBuffer strb;
-  strb.append(SSHPacket::toString());
-  strb.appendFormatted("Reason code: [ %s ]\n", convSSHDisconnectReasonCodeToChars(getReasonCode()));
+  strb.append(SSHMessage::toString());
+  strb.appendFormatted("\nReason code: [ %s ]\n", convSSHDisconnectReasonCodeToChars(getReasonCode()));
   strb.appendFormatted("Description: [ %s ]\n", getDescription().getBuffer());
   strb.appendFormatted("Encryption Algorithms Client To Server: [ %s ]\n", getLanguageTag().getBuffer());
   return strb.toString();

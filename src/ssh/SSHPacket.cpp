@@ -333,6 +333,11 @@ zString SSHPacket::toString(void) const {
   strb.append(getPayloadSize());
   strb.append("\nContent length: ");
   strb.append(getBufferContentSize());
-  strb.append("\n");
   return strb.toString();
+}
+
+
+bool SSHPacket::isValid(void) {
+  int total = 4 + 1 + getPayloadSize() + getPaddingLength();
+  return (total % 8 == 0);
 }

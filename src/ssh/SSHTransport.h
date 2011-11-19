@@ -20,16 +20,20 @@
 #include "global.h"
 #include "zObject.h"
 #include "zRunnable.h"
+#include "zMutex.h"
 #include "zThread.h"
 #include "zLogger.h"
 #include "zEvent.h"
+#include "zVectorString.h"
 #include "zSocketTCPConnection.h"
 #include "zSocketTCPConnectionListener.h"
+#include "KeyExchangerListener.h"
 
 
 class SSHTransportListener;
+class KeyExchanger;
 
-class SSHTransport : public zRunnable, public zSocketTCPConnectionListener, virtual public zObject {
+class SSHTransport : public zRunnable, public zSocketTCPConnectionListener, public KeyExchangerListener, virtual public zObject {
 public:
   enum SSHTransportDisconnectedReason {
     SSH_TRANSPORT_DISCONNECTED_REASON_UNKNOWN   = 0x00,
@@ -38,30 +42,43 @@ public:
 
 protected:
   enum SSHTransportState {
-    SSH_TRANSPORT_STATE_NONE         = 0x00,
-    SSH_TRANSPORT_STATE_HELLO_SEND      = 0x01,
-    SSH_TRANSPORT_STATE_HELLO_RECEIVED  = 0x02,
+    SSH_TRANSPORT_STATE_NONE                    = 0x00,
+    SSH_TRANSPORT_STATE_VERSION_SEND            = 0x01,
+    SSH_TRANSPORT_STATE_VERSION_RECEIVED        = 0x02,
+    SSH_TRANSPORT_STATE_VERSION_EXCHANGED       = 0x03,
+    SSH_TRANSPORT_STATE_NEGO_KEY_INIT_SEND      = 0x04,
+    SSH_TRANSPORT_STATE_NEGO_KEY_INIT_RECEIVED  = 0x05,
+    SSH_TRANSPORT_STATE_NEGO_KEY_INIT_EXCHANGED = 0x06,
+    SSH_TRANSPORT_STATE_NEGO_KEY_INIT_PROGRESS  = 0x07,
+    SSH_TRANSPORT_STATE_NEGO_KEY_INIT_COMPLETED = 0x08,
+    SSH_TRANSPORT_STATE_DISCONNECTED            = 0xff
   };
 
-  enum SSHKeyNegotiationState {
-    SSH_KEY_NEGO_STATE_NONE            = 0x00,
-    SSH_KEY_NEGO_STATE_KEY_INIT_SEND      = 0x01,
-    SSH_KEY_NEGO_STATE_KEY_INIT_RECEIVED  = 0x02,
-  };
-
-  zMutex* _mtx;
+  zMutex _mtx;
   zLogger* _logger;
   bool _mustStop;
-  int _state;
-  int _keyNegoState;
+  SSHTransportState _state;
   zThread* _thread;
   zSocketTCPConnection* _connection;
+  KeyExchanger* _keyExchanger;
   zEvent _event;
   bool _listeners;
+  bool _isServer;
 
+  // Remote informations.
+  zVectorString remoteKexAlgorithms;
+  zVectorString remoteServerHostKeyAlgorithms;
+  zVectorString remoteEncryptionAlgorithmsClientToServer;
+  zVectorString remoteEncryptionAlgorithmsServerToClient;
+  zVectorString remoteMacAlgorithmsClientToServer;
+  zVectorString remoteMacAlgorithmsServerToClient;
+  zVectorString remoteCompressionAlgorithmsClientToServer;
+  zVectorString remoteCompressionAlgorithmsServerToClient;
+  zVectorString remoteLanguagesClientToServer;
+  zVectorString remoteLanguagesServerToClient;
 
 public:
-  SSHTransport(zSocketTCPConnection* connection);
+  SSHTransport(zSocketTCPConnection* connection, bool isServer);
   virtual ~SSHTransport(void);
 
   void writeMessage(unsigned char* message, int messageSize);
@@ -71,12 +88,21 @@ public:
   virtual void onIncomingData(unsigned char* buffer, int bufferSize);
   virtual void onDisconected(void);
 
+  // KeyExchangerListener
+  virtual void onMessageGenerated(SSHMessage const& message);
+  virtual void onKeyNegotiationCompleted(void);
+  virtual void onKeyNegotiationFailed(void);
+
   // zRunnable impl.
   virtual int run(void* param);
 
-protected:
 
-  void sendHelloMessage(void);
+  static char const* convSSHTransportStateToChars(SSHTransportState state);
+protected:
+  // Move state machine from current state to the next.
+  void newState(SSHTransportState state);
+
+  void sendVersionMessage(void);
   void sendMessageKeyInit(void);
 };
 

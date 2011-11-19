@@ -74,7 +74,7 @@ public:
   // string language tag [RFC3066]
   zString getLanguageTag(void) const;
 
-  zString toString(void) const;
+  virtual zString toString(void) const;
 
   static char const* convSSHDisconnectReasonCodeToChars(SSHDisconnectReasonCode reason);
 

@@ -44,7 +44,7 @@ void SSHMessageKeyInit::impl_initPacket(void) {
   appendPayload((unsigned char*)(&cookie), SSH_MSG_KEXINIT_COOKIE_SIZE);
 
   char tmp[] = { 0x00, 0x00, 0x00, 0x00};
-  appendPayload((unsigned char*)(&tmp), 4);
+
   // name-list kex_algorithms
   appendPayload((unsigned char*)(&tmp), 4);
   // name-list server_host_key_algorithms
@@ -626,7 +626,7 @@ uint32_t SSHMessageKeyInit::getReserved(void) const {
 zString SSHMessageKeyInit::toString(void) const {
   zStringBuffer strb;
   strb.append(SSHPacket::toString());
-  strb.appendFormatted("Kex algorithms: [ %s ]\n", getKexAlgorithms().toString(", ").getBuffer());
+  strb.appendFormatted("\nKex algorithms: [ %s ]\n", getKexAlgorithms().toString(", ").getBuffer());
   strb.appendFormatted("Server host key algorithms: [ %s ]\n", getServerHostKeyAlgorithms().toString(", ").getBuffer());
   strb.appendFormatted("Encryption Algorithms Client To Server: [ %s ]\n", getEncryptionAlgorithmsClientToServer().toString(", ").getBuffer());
   strb.appendFormatted("Encryption Algorithms Server To Client: [ %s ]\n", getEncryptionAlgorithmsServerToClient().toString(", ").getBuffer());
@@ -637,6 +637,6 @@ zString SSHMessageKeyInit::toString(void) const {
   strb.appendFormatted("Languages Client To Server: [ %s ]\n", getLanguagesClientToServer().toString(", ").getBuffer());
   strb.appendFormatted("Languages Server To Client: [ %s ]\n", getLanguagesServerToClient().toString(", ").getBuffer());
   strb.appendFormatted("first_kex_packet_follows: [ %s ]\n", getFirstKexPacketFollows() ? "true" : "false");
-  strb.appendFormatted("Reserved: [ %d ]\n", getReserved());
+  strb.appendFormatted("Reserved: [ %d ]", getReserved());
   return strb.toString();
 }

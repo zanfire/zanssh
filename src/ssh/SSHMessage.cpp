@@ -73,9 +73,11 @@ unsigned char* SSHMessage::getMessage(int& messageSize) const {
 }
 
 
-zString SSHMessage::toString(void) {
+zString SSHMessage::toString(void) const {
   zStringBuffer strb;
   strb.append(SSHPacket::toString());
+  strb.append("\nMessage type: ");
+  strb.append(convSSHMessageTypeToChars(getMessageType()));
   return strb.toString();
 }
 
@@ -103,4 +105,39 @@ int SSHMessage::skipString(unsigned char** message, int& messageSize) {
   uint32_t length = ntohl(((uint32_t*)*message)[0]);
   return skipBytes(length + 4, message, messageSize);
 
+}
+
+
+char const* SSHMessage::convSSHMessageTypeToChars(SSHMessageType type) {
+  switch(type) {
+    case SSH_MSG_INVALID:                     return "SSH_MSG_INVALID";
+    case SSH_MSG_DISCONNECT:                  return "SSH_MSG_DISCONNECT";
+    case SSH_MSG_IGNORE:                      return "SSH_MSG_IGNORE";
+    case SSH_MSG_UNIMPLEMENTED:               return "SSH_MSG_UNIMPLEMENTED";
+    case SSH_MSG_DEBUG:                       return "SSH_MSG_DEBUG";
+    case SSH_MSG_SERVICE_REQUEST:             return "SSH_MSG_SERVICE_REQUEST";
+    case SSH_MSG_SERVICE_ACCEPT:              return "SSH_MSG_SERVICE_ACCEPT";
+    case SSH_MSG_KEXINIT:                     return "SSH_MSG_KEXINIT";
+    case SSH_MSG_NEWKEYS:                     return "SSH_MSG_NEWKEYS";
+    case SSH_MSG_USERAUTH_REQUEST:            return "SSH_MSG_USERAUTH_REQUEST";
+    case SSH_MSG_USERAUTH_FAILURE:            return "SSH_MSG_USERAUTH_FAILURE";
+    case SSH_MSG_USERAUTH_SUCCESS:            return "SSH_MSG_USERAUTH_SUCCESS";
+    case SSH_MSG_USERAUTH_BANNER:             return "SSH_MSG_USERAUTH_BANNER";
+    case SSH_MSG_GLOBAL_REQUEST:              return "SSH_MSG_GLOBAL_REQUEST";
+    case SSH_MSG_REQUEST_SUCCESS:             return "SSH_MSG_REQUEST_SUCCESS";
+    case SSH_MSG_REQUEST_FAILURE:             return "SSH_MSG_REQUEST_FAILURE";
+    case SSH_MSG_CHANNEL_OPEN:                return "SSH_MSG_CHANNEL_OPEN";
+    case SSH_MSG_CHANNEL_OPEN_CONFIRMATION:   return "SSH_MSG_CHANNEL_OPEN_CONFIRMATION";
+    case SSH_MSG_CHANNEL_OPEN_FAILURE:        return "SSH_MSG_CHANNEL_OPEN_FAILURE";
+    case SSH_MSG_CHANNEL_WINDOW_ADJUST:       return "SSH_MSG_CHANNEL_WINDOW_ADJUST";
+    case SSH_MSG_CHANNEL_DATA:                return "SSH_MSG_CHANNEL_DATA";
+    case SSH_MSG_CHANNEL_EXTENDED_DATA:       return "SSH_MSG_CHANNEL_EXTENDED_DATA";
+    case SSH_MSG_CHANNEL_EOF:                 return "SSH_MSG_CHANNEL_EOF";
+    case SSH_MSG_CHANNEL_CLOSE:               return "SSH_MSG_CHANNEL_CLOSE";
+    case SSH_MSG_CHANNEL_REQUEST:             return "SSH_MSG_CHANNEL_REQUEST";
+    case SSH_MSG_CHANNEL_SUCCESS:             return "SSH_MSG_CHANNEL_SUCCESS";
+    case SSH_MSG_CHANNEL_FAILURE:             return "SSH_MSG_CHANNEL_FAILURE";
+    default: break;
+  }
+  return "??";
 }

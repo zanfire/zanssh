@@ -34,6 +34,16 @@ public:
     SSH_MSG_SERVICE_ACCEPT              = 6,  // [SSH-TRANS]
     SSH_MSG_KEXINIT                     = 20, // [SSH-TRANS]
     SSH_MSG_NEWKEYS                     = 21, // [SSH-TRANS]
+    SSH_MSG_KEX_30                      = 30,
+    SSH_MSG_KEX_31                      = 31,
+    SSH_MSG_KEX_32                      = 32,
+    SSH_MSG_KEX_33                      = 33,
+    SSH_MSG_KEX_34                      = 34,
+    SSH_MSG_KEX_35                      = 35,
+    SSH_MSG_KEX_36                      = 36,
+    SSH_MSG_KEX_37                      = 37,
+    SSH_MSG_KEX_38                      = 38,
+    SSH_MSG_KEX_39                      = 39,
     SSH_MSG_USERAUTH_REQUEST            = 50, // [SSH-USERAUTH]
     SSH_MSG_USERAUTH_FAILURE            = 51, // [SSH-USERAUTH]
     SSH_MSG_USERAUTH_SUCCESS            = 52, // [SSH-USERAUTH]
@@ -63,7 +73,9 @@ public:
   SSHMessageType getMessageType(void) const;
   unsigned char* getMessage(int& messageSize) const;
 
-  zString toString(void);
+  virtual zString toString(void) const;
+
+  static char const* convSSHMessageTypeToChars(SSHMessageType type);
 
 protected:
   virtual void impl_initPacket(void);
