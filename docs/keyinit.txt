@@ -1,23 +1,51 @@
-Received KEXINIT: Kex algorithms: 
-[ ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521, diffie-hellman-group-exchange-sha256, diffie-hellman-group-exchange-sha1, diffie-hellman-group14-sha1, diffie-hellman-group1-sha ]
+/home/zan/Projects/zanssh/src/server/zansshserver server version 0.1
+Copyright 2009-2011 Matteo Valdina (bugs: zanfire@gmail.com)
+Configured local port to 50601
+Configured local address to 127.0.0.1:50601
+Press 'q' to terminate process.
+Send hello message [SSH-2.0-zanssh_0.1
 
-Server host key algorithms: [ ecdsa
--sha2-nistp256-cert-v01@openssh.com, ecdsa-sha2-nistp384-cert-v01@openssh.com, ecdsa-sha2-nistp521-cert-v01@openssh.com, ssh-rsa-cert-v01@openssh.com, ssh-dss-cert-v01@openssh.com, ssh-rsa-cert-v00@openssh.com, ssh-dss-cert-v00@openssh.com, ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521, ssh-rsa, ssh-ds ]
+]
+Received 32 bytes from remote host.
+Received SSH hello message from remote host, msg: SSH-2.0-OpenSSH_5.8p1-hpn13v10
 
-
-Encryption Algorithms Client To Server: [ aes128-ctr, aes192-ctr, aes256-ctr, arcfour256, arcfour128, aes128-cbc, 3des-cbc, blowfish-cbc, cast128-cbc, aes192-cbc, aes256-cbc, arcfour, rijndael-cbc@lysator.liu.s ]
-
-
-Encryption Algorithms Server To Client: [ aes128-ctr, aes192-ctr, aes256-ctr, arcfour256, arcfour128, aes128-cbc, 3des-cbc, blowfish-cbc, cast128-cbc, aes192-cbc, aes256-cbc, arcfour, rijndael-cbc@lysator.liu.s ]
-
-
-Mac Algorithms Client To Server: [ hmac-md5, hmac-sha1, umac-64@openssh.com, hmac-ripemd160, hmac-ripemd160@openssh.com, hmac-sha1-96, hmac-md5-9 ]
-
-Compression Algorithms Client To Server: [ none, zlib@openssh.com, zli ]
-Compression Algorithms Server To Client: [ none, zlib@openssh.com, zli ]
-
-Languages Client To Server: [ none, zlib@openssh.com, zli ]
-Languages Server To Client: [ none, zlib@openssh.com, zli ]
+ len: 32
+Prepared KEXINIT: Packet length: 196 Padding length: 0 Payload length: 195Kex algorithms: [ diffie-hellman-group1-sha1, diffie-hellman-group14-sha1 ]
+Server host key algorithms: [ ssh-dss, ssh-rsa ]
+Encryption Algorithms Client To Server: [ none ]
+Encryption Algorithms Server To Client: [  ]
+Mac Algorithms Client To Server: [ hmac-sha1, hmac-sha1-96 ]
+Mac Algorithms Server To Client: [ hmac-sha1, hmac-sha1-96 ]
+Compression Algorithms Client To Server: [ none ]
+Compression Algorithms Server To Client: [  ]
+Languages Client To Server: [  ]
+Languages Server To Client: [  ]
 first_kex_packet_follows: [ true ]
 Reserved: [ 0 ]
 
+Received 1144 bytes from remote host.
+Received KEXINIT: Packet length: 1140 Padding length: 4 Payload length: 1135Kex algorithms: [ ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521, diffie-hellman-group-exchange-sha256, diffie-hellman-group-exchange-sha1, diffie-hellman-group14-sha1, diffie-hellman-group1-sha1 ]
+Server host key algorithms: [ ecdsa-sha2-nistp256-cert-v01@openssh.com, ecdsa-sha2-nistp384-cert-v01@openssh.com, ecdsa-sha2-nistp521-cert-v01@openssh.com, ssh-rsa-cert-v01@openssh.com, ssh-dss-cert-v01@openssh.com, ssh-rsa-cert-v00@openssh.com, ssh-dss-cert-v00@openssh.com, ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521, ssh-rsa, ssh-dss ]
+Encryption Algorithms Client To Server: [ aes128-ctr, aes192-ctr, aes256-ctr, arcfour256, arcfour128, aes128-cbc, 3des-cbc, blowfish-cbc, cast128-cbc, aes192-cbc, aes256-cbc, arcfour, rijndael-cbc@lysator.liu.se ]
+Encryption Algorithms Server To Client: [ aes128-ctr, aes192-ctr, aes256-ctr, arcfour256, arcfour128, aes128-cbc, 3des-cbc, blowfish-cbc, cast128-cbc, aes192-cbc, aes256-cbc, arcfour, rijndael-cbc@lysator.liu.se ]
+Mac Algorithms Client To Server: [ hmac-md5, hmac-sha1, umac-64@openssh.com, hmac-ripemd160, hmac-ripemd160@openssh.com, hmac-sha1-96, hmac-md5-96 ]
+Mac Algorithms Server To Client: [ hmac-md5, hmac-sha1, umac-64@openssh.com, hmac-ripemd160, hmac-ripemd160@openssh.com, hmac-sha1-96, hmac-md5-96 ]
+Compression Algorithms Client To Server: [ none, zlib@openssh.com, zlib ]
+Compression Algorithms Server To Client: [  ]
+Languages Client To Server: [  ]
+Languages Server To Client: [  ]
+first_kex_packet_follows: [ true ]
+Reserved: [ 0 ]
+
+Prepared KEXINIT: Packet length: 196 Padding length: 0 Payload length: 195Kex algorithms: [ diffie-hellman-group1-sha1, diffie-hellman-group14-sha1 ]
+Server host key algorithms: [ ssh-dss, ssh-rsa ]
+Encryption Algorithms Client To Server: [ none ]
+Encryption Algorithms Server To Client: [  ]
+Mac Algorithms Client To Server: [ hmac-sha1, hmac-sha1-96 ]
+Mac Algorithms Server To Client: [ hmac-sha1, hmac-sha1-96 ]
+Compression Algorithms Client To Server: [ none ]
+Compression Algorithms Server To Client: [  ]
+Languages Client To Server: [  ]
+Languages Server To Client: [  ]
+first_kex_packet_follows: [ true ]
+Reserved: [ 0 ]
