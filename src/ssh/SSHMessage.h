@@ -44,6 +44,16 @@ public:
     SSH_MSG_KEX_37                      = 37,
     SSH_MSG_KEX_38                      = 38,
     SSH_MSG_KEX_39                      = 39,
+    SSH_MSG_KEX_40                      = 40,
+    SSH_MSG_KEX_41                      = 41,
+    SSH_MSG_KEX_42                      = 42,
+    SSH_MSG_KEX_43                      = 43,
+    SSH_MSG_KEX_44                      = 44,
+    SSH_MSG_KEX_45                      = 45,
+    SSH_MSG_KEX_46                      = 46,
+    SSH_MSG_KEX_47                      = 47,
+    SSH_MSG_KEX_48                      = 48,
+    SSH_MSG_KEX_49                      = 49,
     SSH_MSG_USERAUTH_REQUEST            = 50, // [SSH-USERAUTH]
     SSH_MSG_USERAUTH_FAILURE            = 51, // [SSH-USERAUTH]
     SSH_MSG_USERAUTH_SUCCESS            = 52, // [SSH-USERAUTH]

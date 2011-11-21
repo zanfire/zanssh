@@ -28,6 +28,9 @@
 /* Define to 1 if you have the `memset' function. */
 #undef HAVE_MEMSET
 
+/* Define to 1 if you have the <openssl/bn.h> header file. */
+#undef HAVE_OPENSSL_BN_H
+
 /* Define to 1 if you have the <pthread.h> header file. */
 #undef HAVE_PTHREAD_H
 

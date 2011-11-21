@@ -19,7 +19,7 @@
 #include "zStringBuffer.h"
 #include "zStringTokenizer.h"
 
-#include "zRandom.h"
+#include "zBigNum.h"
 
 #include <arpa/inet.h>
 
@@ -29,6 +29,30 @@ SSHMessageKeyDHInit::SSHMessageKeyDHInit(unsigned char* buffer, int bufferSize) 
 
 SSHMessageKeyDHInit::~SSHMessageKeyDHInit(void) {
 }
+
+
+bool SSHMessageKeyDHInit::setE(zBigNum) {
+  return false;
+}
+
+
+bool SSHMessageKeyDHInit::getE(zBigNum& bignum) {
+  int messageSize = -1;
+  unsigned char* message = getMessage(messageSize);
+  if (message == NULL || messageSize <= SSH_MSG_KEXINIT_COOKIE_SIZE) {
+    return false;
+  }
+
+  if (message != NULL && messageSize >= 4) {
+    int len = ntohl(((uint32_t*)message)[0]);
+    if (messageSize != (len + 4)) return false;
+
+    bignum.parseFromMPInt(message + 4, len);
+  }
+  return true;
+
+}
+
 
 
 void SSHMessageKeyDHInit::impl_initPacket(void) {

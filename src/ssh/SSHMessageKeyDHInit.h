@@ -21,7 +21,7 @@
 
 #include "zString.h"
 #include "zVectorString.h"
-
+#include "zBigNum.h"
 
 #define SSH_MSG_KEXINIT_COOKIE_SIZE 16
 
@@ -38,10 +38,12 @@ public:
   //
   // Setter
   //
+  bool setE(zBigNum);
 
   //
   // Getter
   //
+  bool getE(zBigNum& bignum);
 
 
   virtual zString toString(void) const;

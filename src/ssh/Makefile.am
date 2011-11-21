@@ -11,5 +11,5 @@ libzanssh_a_SOURCES = \
 	SSHTransportListener.cpp \
 	KeyExchanger.cpp \
 	KeyExchangerListener.cpp \
-	KeyExchangerDH.cpp
-
+	KeyExchangerDH.cpp \
+	zBigNum.cpp 

@@ -32,6 +32,7 @@ static zVector g_loggers;
 
 
 #define CHECK_FATAL(error, message) if (error != 0) { zLogger::getLogger("base")->fatal("Fatal error %d (%s), %s.", error, strerror(errno), message); }
+#define FATAL(message) zLogger::getLogger("base")->fatal("Fatal error: %s.", message);
 #define ZLOGGER zLogger::getLogger("base")
 
 

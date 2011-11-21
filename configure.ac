@@ -67,6 +67,24 @@ fi
 # end pthread stuff
 
 
+# Check for openssl stuff.
+have_openssl=no
+AC_SEARCH_LIBS([BN_new], [crypto], [have_openssl=yes])
+if test "x${have_openssl}" = xyes; then
+  AC_CHECK_HEADERS([openssl/bn.h], [], [have_openssl=no])
+fi
+
+if test "x${have_openssl}" = xno; then
+  AC_MSG_ERROR([
+---------------------------------------
+Unable to find openSSL on this system.
+openSSL is required, build aborted.
+---------------------------------------
+  ])
+fi
+# end pthread stuff
+
+
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h string.h pthread.h time.h])
 # Socket related header

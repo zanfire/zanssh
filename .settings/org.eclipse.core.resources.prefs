@@ -1,5 +1,6 @@
-#Tue Nov 15 14:09:28 CET 2011
+#Sat Nov 19 19:50:46 CET 2011
 eclipse.preferences.version=1
+encoding//src/ssh/KeyExchangerDH.h=UTF-8
 encoding//src/ssh/SSHMessage.cpp=UTF-8
 encoding//src/ssh/SSHPacket.cpp=UTF-8
 encoding//src/ssh/SSHPacket.h=UTF-8

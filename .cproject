@@ -33,8 +33,9 @@
 								<option id="gnu.c.compiler.option.include.paths.1086070862" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include"/>
 								</option>
-								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1371703156" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1371703156" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;size_t=unsigned int&quot;"/>
+									<listOptionValue builtIn="false" value="BIGNUM=void"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.852071186" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -42,8 +43,9 @@
 								<option id="gnu.cpp.compiler.option.include.paths.282925218" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.preprocessor.def.1480324435" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1480324435" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;size_t=unsigned int&quot;"/>
+									<listOptionValue builtIn="false" value="BIGNUM=void"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1749534646" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
